@@ -9,6 +9,10 @@ import { qs } from "./utils.js";
 export function initPsychSupport() {
   const section = qs("#psych-support");
   if (!section) return () => {};
+  
+  // Prevent double initialization
+  if (section.dataset.psychSupportInitialized === "true") return () => {};
+  section.dataset.psychSupportInitialized = "true";
 
   const cleanupFns = [];
   const bookedIds = new Set();
@@ -16,12 +20,7 @@ export function initPsychSupport() {
   const TAB_LABELS = ["Для родителей", "Для детей", "Для семьи"];
   let activeTabLabel = "Для родителей";
 
-  const tabButtons = Array.from(section.querySelectorAll("button")).filter(
-    (btn) => {
-      const text = normalize(btn.textContent);
-      return TAB_LABELS.some((label) => text.includes(label));
-    },
-  );
+  const tabButtons = Array.from(section.querySelectorAll("[data-psych-tab]"));
 
   if (!tabButtons.length) return () => {};
 
@@ -39,6 +38,7 @@ export function initPsychSupport() {
   }
 
   function setTabButtonStyle(btn, active) {
+    if (!btn) return;
     if (active) {
       btn.style.background = "#fff";
       btn.style.color = "#2C5F4F";
@@ -57,8 +57,8 @@ export function initPsychSupport() {
 
   function renderTabs() {
     tabButtons.forEach((btn) => {
-      const label = getTabLabel(btn);
-      const active = label === activeTabLabel;
+      const tabType = btn.getAttribute("data-psych-tab");
+      const active = tabType === activeTabLabel;
       setTabButtonStyle(btn, active);
     });
   }
@@ -79,9 +79,9 @@ export function initPsychSupport() {
 
   tabButtons.forEach((btn) => {
     const handler = () => {
-      const label = getTabLabel(btn);
-      if (!label) return;
-      activeTabLabel = label;
+      const tabType = btn.getAttribute("data-psych-tab");
+      if (!tabType) return;
+      activeTabLabel = tabType;
       renderTabs();
     };
 

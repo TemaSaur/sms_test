@@ -10,19 +10,20 @@ import { qs } from "./utils.js";
 export function initCommunity() {
   const section = qs("#community");
   if (!section) return () => {};
+  
+  // Prevent double initialization
+  if (section.dataset.communityInitialized === "true") return () => {};
+  section.dataset.communityInitialized = "true";
 
   const state = {
     activeTab: "groups",
     likedIds: new Set(),
   };
 
-  // Find tab buttons by their text content.
-  const tabButtons = Array.from(section.querySelectorAll("button")).filter((btn) => {
-    const text = (btn.textContent || "").trim();
-    return text.includes("Группы чатов") || text.includes("Доска объявлений");
-  });
+  // Find tab buttons using data-* attributes
+  const tabButtons = Array.from(section.querySelectorAll("[data-community-tab]"));
 
-  const groupsBlock = section.querySelector(".gap-6.grid.grid-cols-1.md\\:grid-cols-3.mb-8");
+  const groupsBlock = section.querySelector("[data-community-groups]");
   if (!groupsBlock) return () => {};
 
   // Create a dedicated board container right after groups cards.
@@ -34,17 +35,15 @@ export function initCommunity() {
   const cleanupFns = [];
 
   function setTabButtonStyle(button, active) {
+    if (!button) return;
     button.style.background = active ? "#3D8B6E" : "transparent";
     button.style.color = active ? "#fff" : "#4A6B5E";
   }
 
   function updateTabsUi() {
     tabButtons.forEach((btn) => {
-      const isGroups = (btn.textContent || "").includes("Группы чатов");
-      const shouldBeActive =
-        (state.activeTab === "groups" && isGroups) ||
-        (state.activeTab === "board" && !isGroups);
-
+      const tabType = btn.getAttribute("data-community-tab");
+      const shouldBeActive = state.activeTab === tabType;
       setTabButtonStyle(btn, shouldBeActive);
     });
 
@@ -142,8 +141,8 @@ export function initCommunity() {
   // Tab button handlers.
   tabButtons.forEach((btn) => {
     const handler = () => {
-      const isGroups = (btn.textContent || "").includes("Группы чатов");
-      state.activeTab = isGroups ? "groups" : "board";
+      const tabType = btn.getAttribute("data-community-tab");
+      state.activeTab = tabType;
       updateTabsUi();
       if (state.activeTab === "board") renderBoard();
     };

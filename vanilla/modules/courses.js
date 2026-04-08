@@ -10,19 +10,20 @@ import { qs } from "./utils.js";
 export function initCourses() {
   const section = qs("#courses");
   if (!section) return () => {};
+  
+  // Prevent double initialization
+  if (section.dataset.coursesInitialized === "true") return () => {};
+  section.dataset.coursesInitialized = "true";
 
   const cleanupFns = [];
   const enrolledCourseIds = new Set();
 
-  // 1) Filter chips row (first "flex flex-wrap gap-2 mb-8" inside #courses)
-  const filterRow = section.querySelector(".flex.gap-2.flex-wrap.mb-8");
-  if (!filterRow) return () => {};
-
-  const filterButtons = Array.from(filterRow.querySelectorAll("button"));
+  // 1) Filter buttons using data-* attributes
+  const filterButtons = Array.from(section.querySelectorAll("[data-courses-category]"));
   if (!filterButtons.length) return () => {};
 
-  // 2) Course cards grid (contains .lg:grid-cols-4)
-  const cardsGrid = section.querySelector(".grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4");
+  // 2) Course cards grid using data-* attribute
+  const cardsGrid = section.querySelector("[data-courses-grid]");
   if (!cardsGrid) return () => {};
 
   const cards = Array.from(cardsGrid.children).filter(
@@ -35,10 +36,11 @@ export function initCourses() {
   });
 
   const state = {
-    activeCategory: normalizeCategory(filterButtons[0].textContent || "Все"),
+    activeCategory: normalizeCategory(filterButtons[0].getAttribute("data-courses-category") || "Все"),
   };
 
   function setFilterButtonStyle(button, isActive) {
+    if (!button) return;
     if (isActive) {
       button.style.background = "#3D8B6E";
       button.style.color = "#fff";

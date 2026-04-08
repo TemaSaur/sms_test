@@ -11,6 +11,10 @@ import { qs } from "./utils.js";
 export function initCalendar() {
   const section = qs("#calendar");
   if (!section) return () => {};
+  
+  // Prevent double initialization
+  if (section.dataset.calendarInitialized === "true") return () => {};
+  section.dataset.calendarInitialized = "true";
 
   const cleanupFns = [];
   const registeredIds = new Set();
@@ -19,15 +23,14 @@ export function initCalendar() {
     activeFilter: "all", // all | online | offline
   };
 
-  // Filter row
-  const filterRow = findFilterRow(section);
-  const filterButtons = filterRow ? Array.from(filterRow.querySelectorAll("button")) : [];
+  // Filter buttons using data-* attributes
+  const filterButtons = Array.from(section.querySelectorAll("[data-calendar-filter]"));
 
-  // Event cards grid
-  const cardsGrid = section.querySelector(".grid.grid-cols-1.gap-5.lg\\:grid-cols-3.md\\:grid-cols-2");
-  const cards = cardsGrid
-    ? Array.from(cardsGrid.children).filter((el) => el instanceof HTMLElement)
-    : [];
+  // Event cards grid - find by looking for event cards with registration buttons
+  const cards = Array.from(section.querySelectorAll("button[class*='font-semibold'][class*='whitespace-nowrap']"))
+    .map(btn => btn.closest('.rounded-2xl, .transition-all') || btn.parentElement?.parentElement)
+    .filter(el => el && el instanceof HTMLElement)
+    .filter((el, index, arr) => arr.indexOf(el) === index); // remove duplicates
 
   if (!filterButtons.length || !cards.length) return () => {};
 
@@ -55,6 +58,7 @@ export function initCalendar() {
   }
 
   function setFilterButtonStyle(button, isActive) {
+    if (!button) return;
     button.style.background = isActive ? "#3D8B6E" : "transparent";
     button.style.color = isActive ? "#fff" : "#4A6B5E";
     button.style.border = "none";

@@ -12,6 +12,10 @@ import { childWord, clamp, formatRub, qs } from "./utils.js";
 export function initCalculator() {
   const section = qs("#calculator");
   if (!section) return () => {};
+  
+  // Prevent double initialization
+  if (section.dataset.calculatorInitialized === "true") return () => {};
+  section.dataset.calculatorInitialized = "true";
 
   const state = {
     region: "moscow",
@@ -20,25 +24,25 @@ export function initCalculator() {
     detailsOpen: false,
   };
 
-  // --- locate existing DOM nodes inside snapshot HTML ---
-  const regionSelect = section.querySelector("select");
-  const childrenBlock = findChildrenBlock(section);
-  const decBtn = childrenBlock?.querySelector("button:nth-of-type(1)") || null;
-  const incBtn = childrenBlock?.querySelector("button:nth-of-type(2)") || null;
-  const childrenValueEl = childrenBlock?.querySelector("span") || null;
+  // --- locate existing DOM nodes using data-* attributes ---
+  const regionSelect = section.querySelector("[data-calc-region]");
+  const childrenBlock = section.querySelector("[data-calc-children]");
+  const decBtn = section.querySelector("[data-calc-children-dec]");
+  const incBtn = section.querySelector("[data-calc-children-inc]");
+  const childrenValueEl = section.querySelector("[data-calc-children-value]");
 
-  const housingBlock = findHousingBlock(section);
-  const housingYesBtn = housingBlock?.querySelector("button:nth-of-type(1)") || null;
-  const housingNoBtn = housingBlock?.querySelector("button:nth-of-type(2)") || null;
+  const housingBlock = section.querySelector("[data-calc-housing]");
+  const housingYesBtn = section.querySelector("[data-calc-housing-yes]");
+  const housingNoBtn = section.querySelector("[data-calc-housing-no]");
 
-  const summaryBox = findSummaryBox(section);
-  const totalEl = summaryBox?.querySelector("p.font-bold") || null;
-  const subtitleEl = summaryBox?.querySelector("p.text-sm.mt-1") || null;
-  const detailsToggleBtn = summaryBox?.querySelector("button") || null;
+  const summaryBox = section.querySelector("[data-calc-summary]");
+  const totalEl = section.querySelector("[data-calc-total]");
+  const subtitleEl = section.querySelector("[data-calc-subtitle]");
+  const detailsToggleBtn = section.querySelector("[data-calc-details-toggle]");
 
   let detailsContainer = summaryBox?.querySelector("[data-calc-details]") || null;
 
-  if (!regionSelect || !childrenValueEl || !housingYesBtn || !housingNoBtn || !summaryBox) {
+  if (!regionSelect || !childrenValueEl || !housingYesBtn || !housingNoBtn || !summaryBox || !decBtn || !incBtn) {
     return () => {};
   }
 
@@ -247,40 +251,6 @@ function bind(target, eventName, handler) {
   if (!target || typeof target.addEventListener !== "function") return () => {};
   target.addEventListener(eventName, handler);
   return () => target.removeEventListener(eventName, handler);
-}
-
-function findChildrenBlock(section) {
-  const labels = Array.from(section.querySelectorAll("label"));
-  const targetLabel = labels.find((el) =>
-    (el.textContent || "").toLowerCase().includes("количество детей"),
-  );
-  if (!targetLabel) return null;
-
-  const wrapper = targetLabel.parentElement;
-  if (!wrapper) return null;
-  return wrapper.querySelector("div.flex.items-center.overflow-hidden") || wrapper.querySelector("div");
-}
-
-function findHousingBlock(section) {
-  const labels = Array.from(section.querySelectorAll("label"));
-  const targetLabel = labels.find((el) =>
-    (el.textContent || "").toLowerCase().includes("субсидия"),
-  );
-  if (!targetLabel) return null;
-
-  const wrapper = targetLabel.parentElement;
-  if (!wrapper) return null;
-  return wrapper.querySelector("div.flex.items-center.gap-3") || wrapper.querySelector("div");
-}
-
-function findSummaryBox(section) {
-  // Box that contains "Ориентировочная поддержка..."
-  const paragraphs = Array.from(section.querySelectorAll("p"));
-  const marker = paragraphs.find((p) =>
-    (p.textContent || "").toLowerCase().includes("ориентировочная поддержка"),
-  );
-  if (!marker) return null;
-  return marker.closest("div.md\\:p-8, div.p-6, div.rounded-2xl") || marker.parentElement?.parentElement;
 }
 
 function getLastTextNode(el) {

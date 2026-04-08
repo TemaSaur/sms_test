@@ -10,6 +10,10 @@ import { qs } from "./utils.js";
 export function initFaq() {
   const section = qs("#faq");
   if (!section) return () => {};
+  
+  // Prevent double initialization
+  if (section.dataset.faqInitialized === "true") return () => {};
+  section.dataset.faqInitialized = "true";
 
   const cleanupFns = [];
   const state = {
@@ -17,10 +21,9 @@ export function initFaq() {
     openId: 1,
   };
 
-  const filterRow = section.querySelector(".flex.justify-center.gap-2.flex-wrap.mb-10");
-  const filterButtons = filterRow ? Array.from(filterRow.querySelectorAll("button")) : [];
-  const accordionRoot = section.querySelector(".space-y-3");
-  const items = accordionRoot ? Array.from(accordionRoot.children).filter((el) => el instanceof HTMLElement) : [];
+  const filterButtons = Array.from(section.querySelectorAll("[data-faq-category]"));
+  const accordionRoot = section.querySelector("[data-faq-accordion]");
+  const items = accordionRoot ? Array.from(accordionRoot.querySelectorAll("[data-faq-item]")) : [];
 
   if (!filterButtons.length || !items.length) return () => {};
 
@@ -37,6 +40,7 @@ export function initFaq() {
   }
 
   function setFilterStyle(btn, active) {
+    if (!btn) return;
     btn.style.background = active ? "#3D8B6E" : "#EEF7F3";
     btn.style.color = active ? "#fff" : "#3D8B6E";
     btn.style.border = "none";
@@ -52,9 +56,10 @@ export function initFaq() {
   }
 
   function setExpanded(item, expanded) {
+    const trigger = item.querySelector("[data-faq-trigger]");
     const dot = item.querySelector("span.mt-1.w-2.h-2.rounded-full");
-    const chevronWrap = item.querySelector("button > div.w-8.h-8");
-    const chevron = item.querySelector("button > div.w-8.h-8 i");
+    const chevronWrap = trigger?.querySelector("div.w-8.h-8");
+    const chevron = trigger?.querySelector("i");
     const contentWrap = item.querySelector("div.transition-all.duration-300.overflow-hidden");
 
     item.style.background = expanded ? "#fff" : "#F7F4EF";
@@ -76,7 +81,7 @@ export function initFaq() {
 
   function renderFilters() {
     filterButtons.forEach((btn) => {
-      const category = normalize(btn.textContent || "");
+      const category = normalize(btn.getAttribute("data-faq-category") || "");
       const active = category === state.activeCategory;
       setFilterStyle(btn, active);
     });
