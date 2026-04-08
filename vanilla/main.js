@@ -5,6 +5,10 @@ import { initRevealSections } from "./modules/reveal.js";
 import { initCalculator } from "./modules/calculator.js";
 import { initMap } from "./modules/map.js";
 import { initCommunity } from "./modules/community.js";
+import { initCourses } from "./modules/courses.js";
+import { initFaq } from "./modules/faq.js";
+import { initPsychSupport } from "./modules/psychSupport.js";
+import { initCalendar } from "./modules/calendar.js";
 
 /**
  * Vanilla bootstrap entrypoint.
@@ -26,6 +30,10 @@ function initApp() {
   registerCleanup(initCalculator);
   registerCleanup(initMap);
   registerCleanup(initCommunity);
+  registerCleanup(initCourses);
+  registerCleanup(initFaq);
+  registerCleanup(initPsychSupport);
+  registerCleanup(initCalendar);
 
   // Optional debug marker.
   window.__familyNavigatorVanilla = {
