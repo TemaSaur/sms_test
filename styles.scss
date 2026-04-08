@@ -20,3 +20,21 @@ header {
 .display {
     font-family: "Playfair Display", serif;
 }
+
+.logo {
+    @apply flex items-center gap-2 cursor-pointer;
+}
+
+.logo-icon {
+    @apply flex items-center justify-center rounded-xl h-8 w-8;
+
+    background: linear-gradient(135deg, #3d8b6e, #2c5f4f);
+}
+
+.text-black {
+    color: #1a3a2e;
+}
+
+.serif {
+    font-family: serif;
+}
