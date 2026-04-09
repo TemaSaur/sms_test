@@ -18,16 +18,14 @@
     name="description"
   />
   <meta content="пособия семьям, льготы молодым семьям, семейная ипотека" name="keywords" />
+  <script src="https://api-maps.yandex.ru/v3/?lang=ru_RU&apikey=531b4902-5d28-4740-885f-f04519cdcee1" type="text/javascript"></script>
   <script src="vanilla/main.js" crossorigin="" type="module"></script>
   <!--<link href="index.css" rel="stylesheet" crossorigin="" />-->
-  <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link href="https://public.readdy.ai/gen_page/readdy-logo.png" rel="icon" type="image/png" />
+  <link href="img/icon.png" rel="icon" type="image/png" />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/posthog-js@1.96.1/dist/array.full.min.js" async></script>
 
   <body>
-    <div id="root">
       <div class="min-h-screen">
         <header>
           <a href="#" class="logo">
@@ -860,7 +858,7 @@
                       <img
                         alt="Подготовка к родам: тело и психология"
                         class="object-cover object-top h-full w-full duration-500 transition-transform hover:scale-105"
-                        src="https://readdy.ai/api/search-image?query=pregnant%20woman%20doing%20yoga%20breathing%20exercises%20in%20bright%20airy%20studio%20with%20soft%20mint%20green%20and%20cream%20decor%2C%20calm%20peaceful%20atmosphere%2C%20professional%20wellness%20photography&width=500&height=320&seq=course1&orientation=landscape"
+                        src="img/course_1.jpg"
                       />
                       <div
                         class="absolute inset-0"
@@ -937,7 +935,7 @@
                       <img
                         alt="Уход за новорождённым: первые 3 месяца"
                         class="object-cover object-top h-full w-full duration-500 transition-transform hover:scale-105"
-                        src="https://readdy.ai/api/search-image?query=mother%20gently%20bathing%20newborn%20baby%20in%20soft%20warm%20light%2C%20cream%20colored%20bathroom%2C%20tender%20caring%20moment%2C%20professional%20lifestyle%20photography%20with%20pastel%20tones&width=500&height=320&seq=course2&orientation=landscape"
+                        src="img/course_2.jpg"
                       />
                       <div
                         class="absolute inset-0"
@@ -1014,7 +1012,7 @@
                       <img
                         alt="Семейный бюджет с ребёнком: как не потерять голову"
                         class="object-cover object-top h-full w-full duration-500 transition-transform hover:scale-105"
-                        src="https://readdy.ai/api/search-image?query=young%20couple%20sitting%20at%20table%20with%20laptop%20and%20documents%20planning%20family%20budget%2C%20cozy%20home%20office%20with%20plants%20and%20warm%20lighting%2C%20modern%20minimalist%20interior%2C%20lifestyle%20photography&width=500&height=320&seq=course3&orientation=landscape"
+                        src="img/course_3.jpg"
                       />
                       <div
                         class="absolute inset-0"
@@ -1084,7 +1082,7 @@
                       <img
                         alt="Партнёрство в родительстве: как не потерять себя"
                         class="object-cover object-top h-full w-full duration-500 transition-transform hover:scale-105"
-                        src="https://readdy.ai/api/search-image?query=happy%20couple%20with%20baby%20laughing%20together%20in%20bright%20cozy%20living%20room%2C%20warm%20natural%20light%2C%20cream%20and%20sage%20green%20interior%2C%20genuine%20joyful%20family%20moment%2C%20lifestyle%20photography&width=500&height=320&seq=course4&orientation=landscape"
+                        src="img/course_4.jpg"
                       />
                       <div
                         class="absolute inset-0"
@@ -1414,7 +1412,7 @@
                 </div>
                 <div class="grid grid-cols-1 gap-5 lg:grid-cols-3 md:grid-cols-2">
                   <div
-                    class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
+                    data-calendar-type="online" class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
                     style="background: #fff; border: 1px solid #b8e6d5"
                   >
                     <div class="flex items-start justify-between mb-4">
@@ -1426,7 +1424,7 @@
                         ><span style="color: #3d8a6e" class="text-xs font-medium mt-0.5">апр</span>
                       </div>
                       <span
-                        style="background: #e8f7f2; color: #3d8b6e"
+                        data-calendar-type="offline" style="background: #e8f7f2; color: #3d8b6e"
                         class="text-xs font-semibold rounded-full py-1 px-3"
                         >Онлайн</span
                       >
@@ -1461,7 +1459,7 @@
                     </button>
                   </div>
                   <div
-                    class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
+                    data-calendar-type="online" class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
                     style="background: #fff; border: 1px solid #b8e6d5"
                   >
                     <div class="flex items-start justify-between mb-4">
@@ -1508,7 +1506,7 @@
                     </button>
                   </div>
                   <div
-                    class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
+                    data-calendar-type="online" class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
                     style="background: #fff; border: 1px solid #b8e6d5"
                   >
                     <div class="flex items-start justify-between mb-4">
@@ -1520,7 +1518,7 @@
                         ><span style="color: #3d8a6e" class="text-xs font-medium mt-0.5">апр</span>
                       </div>
                       <span
-                        style="background: #e8f7f2; color: #3d8b6e"
+                        data-calendar-type="offline" style="background: #e8f7f2; color: #3d8b6e"
                         class="text-xs font-semibold rounded-full py-1 px-3"
                         >Онлайн</span
                       >
@@ -1555,7 +1553,7 @@
                     </button>
                   </div>
                   <div
-                    class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
+                    data-calendar-type="online" class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
                     style="background: #fff; border: 1px solid #b8e6d5"
                   >
                     <div class="flex items-start justify-between mb-4">
@@ -1602,7 +1600,7 @@
                     </button>
                   </div>
                   <div
-                    class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
+                    data-calendar-type="online" class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
                     style="background: #fff; border: 1px solid #b8e6d5"
                   >
                     <div class="flex items-start justify-between mb-4">
@@ -1614,7 +1612,7 @@
                         ><span style="color: #3d8a6e" class="text-xs font-medium mt-0.5">апр</span>
                       </div>
                       <span
-                        style="background: #e8f7f2; color: #3d8b6e"
+                        data-calendar-type="offline" style="background: #e8f7f2; color: #3d8b6e"
                         class="text-xs font-semibold rounded-full py-1 px-3"
                         >Онлайн</span
                       >
@@ -1649,7 +1647,7 @@
                     </button>
                   </div>
                   <div
-                    class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
+                    data-calendar-type="online" class="transition-all duration-300 rounded-2xl hover:-translate-y-0.5 p-5"
                     style="background: #fff; border: 1px solid #b8e6d5"
                   >
                     <div class="flex items-start justify-between mb-4">
@@ -1778,494 +1776,14 @@
                   </div>
                 </div>
                 <div class="flex flex-col gap-6 lg:flex-row">
-                  <div class="flex-1 relative">
-                    <div
-                      class="overflow-hidden rounded-2xl w-full leaflet-container leaflet-fade-anim leaflet-grab leaflet-retina leaflet-touch leaflet-touch-drag leaflet-touch-zoom"
-                      style="height: 500px; border: 1.5px solid #b8e6d5; position: relative"
-                      tabindex="0"
-                    >
-                      <div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(-215px, 0, 0)">
-                        <div class="leaflet-pane leaflet-tile-pane">
-                          <div class="leaflet-layer" style="z-index: 1; opacity: 1">
-                            <div
-                              class="leaflet-zoom-animated leaflet-tile-container"
-                              style="z-index: 17; transform: translate3d(234px, 72px, 0) scale(0.5)"
-                            ></div>
-                            <div
-                              class="leaflet-zoom-animated leaflet-tile-container"
-                              style="z-index: 18; transform: translate3d(199px, 36px, 0) scale(1)"
-                            >
-                              <img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://a.tile.openstreetmap.org/11/1238/640.png"
-                                style="width: 256px; height: 256px; transform: translate3d(136px, 50px, 0); opacity: 1"
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://b.tile.openstreetmap.org/11/1238/641.png"
-                                style="width: 256px; height: 256px; transform: translate3d(136px, 306px, 0); opacity: 1"
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://c.tile.openstreetmap.org/11/1237/640.png"
-                                style="width: 256px; height: 256px; transform: translate3d(-120px, 50px, 0); opacity: 1"
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://b.tile.openstreetmap.org/11/1239/640.png"
-                                style="width: 256px; height: 256px; transform: translate3d(392px, 50px, 0); opacity: 1"
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://a.tile.openstreetmap.org/11/1237/641.png"
-                                style="
-                                  width: 256px;
-                                  height: 256px;
-                                  transform: translate3d(-120px, 306px, 0);
-                                  opacity: 1;
-                                "
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://c.tile.openstreetmap.org/11/1239/641.png"
-                                style="width: 256px; height: 256px; transform: translate3d(392px, 306px, 0); opacity: 1"
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://c.tile.openstreetmap.org/11/1238/639.png"
-                                style="
-                                  width: 256px;
-                                  height: 256px;
-                                  transform: translate3d(136px, -206px, 0);
-                                  opacity: 1;
-                                "
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://b.tile.openstreetmap.org/11/1237/639.png"
-                                style="
-                                  width: 256px;
-                                  height: 256px;
-                                  transform: translate3d(-120px, -206px, 0);
-                                  opacity: 1;
-                                "
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://a.tile.openstreetmap.org/11/1239/639.png"
-                                style="
-                                  width: 256px;
-                                  height: 256px;
-                                  transform: translate3d(392px, -206px, 0);
-                                  opacity: 1;
-                                "
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://b.tile.openstreetmap.org/11/1236/640.png"
-                                style="width: 256px; height: 256px; transform: translate3d(-376px, 50px, 0); opacity: 1"
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://c.tile.openstreetmap.org/11/1240/640.png"
-                                style="width: 256px; height: 256px; transform: translate3d(648px, 50px, 0); opacity: 1"
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://a.tile.openstreetmap.org/11/1236/639.png"
-                                style="
-                                  width: 256px;
-                                  height: 256px;
-                                  transform: translate3d(-376px, -206px, 0);
-                                  opacity: 1;
-                                "
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://b.tile.openstreetmap.org/11/1240/639.png"
-                                style="
-                                  width: 256px;
-                                  height: 256px;
-                                  transform: translate3d(648px, -206px, 0);
-                                  opacity: 1;
-                                "
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://c.tile.openstreetmap.org/11/1236/641.png"
-                                style="
-                                  width: 256px;
-                                  height: 256px;
-                                  transform: translate3d(-376px, 306px, 0);
-                                  opacity: 1;
-                                "
-                              /><img
-                                alt=""
-                                class="leaflet-tile leaflet-tile-loaded"
-                                src="https://a.tile.openstreetmap.org/11/1240/641.png"
-                                style="width: 256px; height: 256px; transform: translate3d(648px, 306px, 0); opacity: 1"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div class="leaflet-pane leaflet-overlay-pane"></div>
-                        <div class="leaflet-pane leaflet-shadow-pane"></div>
-                        <div class="leaflet-pane leaflet-marker-pane">
-                          <div
-                            class="leaflet-zoom-animated leaflet-interactive leaflet-marker-icon"
-                            style="
-                              margin-left: -18px;
-                              margin-top: -36px;
-                              width: 36px;
-                              height: 36px;
-                              transform: translate3d(335px, 142px, 0);
-                              z-index: 142;
-                            "
-                            tabindex="0"
-                            role="button"
-                          >
-                            <div
-                              style="
-                                background: #e07070;
-                                width: 36px;
-                                height: 36px;
-                                border-radius: 50% 50% 50% 0;
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 2px solid #fff;
-                                box-shadow: 0 2px 8px #000;
-                              "
-                            >
-                              <span style="transform: rotate(45deg); font-size: 16px">🏥</span>
-                            </div>
-                          </div>
-                          <div
-                            class="leaflet-zoom-animated leaflet-interactive leaflet-marker-icon"
-                            style="
-                              margin-left: -18px;
-                              margin-top: -36px;
-                              width: 36px;
-                              height: 36px;
-                              transform: translate3d(357px, 124px, 0);
-                              z-index: 124;
-                            "
-                            tabindex="0"
-                            role="button"
-                          >
-                            <div
-                              style="
-                                background: #e07070;
-                                width: 36px;
-                                height: 36px;
-                                border-radius: 50% 50% 50% 0;
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 2px solid #fff;
-                                box-shadow: 0 2px 8px #000;
-                              "
-                            >
-                              <span style="transform: rotate(45deg); font-size: 16px">🏥</span>
-                            </div>
-                          </div>
-                          <div
-                            class="leaflet-zoom-animated leaflet-interactive leaflet-marker-icon"
-                            style="
-                              margin-left: -18px;
-                              margin-top: -36px;
-                              width: 36px;
-                              height: 36px;
-                              transform: translate3d(317px, 160px, 0);
-                              z-index: 160;
-                            "
-                            tabindex="0"
-                            role="button"
-                          >
-                            <div
-                              style="
-                                background: #e07070;
-                                width: 36px;
-                                height: 36px;
-                                border-radius: 50% 50% 50% 0;
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 2px solid #fff;
-                                box-shadow: 0 2px 8px #000;
-                              "
-                            >
-                              <span style="transform: rotate(45deg); font-size: 16px">🏥</span>
-                            </div>
-                          </div>
-                          <div
-                            class="leaflet-zoom-animated leaflet-interactive leaflet-marker-icon"
-                            style="
-                              margin-left: -18px;
-                              margin-top: -36px;
-                              width: 36px;
-                              height: 36px;
-                              transform: translate3d(346px, 103px, 0);
-                              z-index: 103;
-                            "
-                            tabindex="0"
-                            role="button"
-                          >
-                            <div
-                              style="
-                                background: #5a9e6f;
-                                width: 36px;
-                                height: 36px;
-                                border-radius: 50% 50% 50% 0;
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 2px solid #fff;
-                                box-shadow: 0 2px 8px #000;
-                              "
-                            >
-                              <span style="transform: rotate(45deg); font-size: 16px">🌳</span>
-                            </div>
-                          </div>
-                          <div
-                            class="leaflet-zoom-animated leaflet-interactive leaflet-marker-icon"
-                            style="
-                              margin-left: -18px;
-                              margin-top: -36px;
-                              width: 36px;
-                              height: 36px;
-                              transform: translate3d(307px, 134px, 0);
-                              z-index: 134;
-                            "
-                            tabindex="0"
-                            role="button"
-                          >
-                            <div
-                              style="
-                                background: #5a9e6f;
-                                width: 36px;
-                                height: 36px;
-                                border-radius: 50% 50% 50% 0;
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 2px solid #fff;
-                                box-shadow: 0 2px 8px #000;
-                              "
-                            >
-                              <span style="transform: rotate(45deg); font-size: 16px">🌳</span>
-                            </div>
-                          </div>
-                          <div
-                            class="leaflet-zoom-animated leaflet-interactive leaflet-marker-icon"
-                            style="
-                              margin-left: -18px;
-                              margin-top: -36px;
-                              width: 36px;
-                              height: 36px;
-                              transform: translate3d(368px, 170px, 0);
-                              z-index: 170;
-                            "
-                            tabindex="0"
-                            role="button"
-                          >
-                            <div
-                              style="
-                                background: #5a9e6f;
-                                width: 36px;
-                                height: 36px;
-                                border-radius: 50% 50% 50% 0;
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 2px solid #fff;
-                                box-shadow: 0 2px 8px #000;
-                              "
-                            >
-                              <span style="transform: rotate(45deg); font-size: 16px">🌳</span>
-                            </div>
-                          </div>
-                          <div
-                            class="leaflet-zoom-animated leaflet-interactive leaflet-marker-icon"
-                            style="
-                              margin-left: -18px;
-                              margin-top: -36px;
-                              width: 36px;
-                              height: 36px;
-                              transform: translate3d(325px, 116px, 0);
-                              z-index: 116;
-                            "
-                            tabindex="0"
-                            role="button"
-                          >
-                            <div
-                              style="
-                                background: #e09a40;
-                                width: 36px;
-                                height: 36px;
-                                border-radius: 50% 50% 50% 0;
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 2px solid #fff;
-                                box-shadow: 0 2px 8px #000;
-                              "
-                            >
-                              <span style="transform: rotate(45deg); font-size: 16px">🏫</span>
-                            </div>
-                          </div>
-                          <div
-                            class="leaflet-zoom-animated leaflet-interactive leaflet-marker-icon"
-                            style="
-                              margin-left: -18px;
-                              margin-top: -36px;
-                              width: 36px;
-                              height: 36px;
-                              transform: translate3d(351px, 150px, 0);
-                              z-index: 150;
-                            "
-                            tabindex="0"
-                            role="button"
-                          >
-                            <div
-                              style="
-                                background: #e09a40;
-                                width: 36px;
-                                height: 36px;
-                                border-radius: 50% 50% 50% 0;
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 2px solid #fff;
-                                box-shadow: 0 2px 8px #000;
-                              "
-                            >
-                              <span style="transform: rotate(45deg); font-size: 16px">🏫</span>
-                            </div>
-                          </div>
-                          <div
-                            class="leaflet-zoom-animated leaflet-interactive leaflet-marker-icon"
-                            style="
-                              margin-left: -18px;
-                              margin-top: -36px;
-                              width: 36px;
-                              height: 36px;
-                              transform: translate3d(376px, 129px, 0);
-                              z-index: 129;
-                            "
-                            tabindex="0"
-                            role="button"
-                          >
-                            <div
-                              style="
-                                background: #e09a40;
-                                width: 36px;
-                                height: 36px;
-                                border-radius: 50% 50% 50% 0;
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 2px solid #fff;
-                                box-shadow: 0 2px 8px #000;
-                              "
-                            >
-                              <span style="transform: rotate(45deg); font-size: 16px">🏫</span>
-                            </div>
-                          </div>
-                          <div
-                            class="leaflet-zoom-animated leaflet-interactive leaflet-marker-icon"
-                            style="
-                              margin-left: -18px;
-                              margin-top: -36px;
-                              width: 36px;
-                              height: 36px;
-                              transform: translate3d(390px, 139px, 0);
-                              z-index: 139;
-                            "
-                            tabindex="0"
-                            role="button"
-                          >
-                            <div
-                              style="
-                                background: #e07070;
-                                width: 36px;
-                                height: 36px;
-                                border-radius: 50% 50% 50% 0;
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 2px solid #fff;
-                                box-shadow: 0 2px 8px #000;
-                              "
-                            >
-                              <span style="transform: rotate(45deg); font-size: 16px">🏥</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="leaflet-pane leaflet-tooltip-pane"></div>
-                        <div class="leaflet-pane leaflet-popup-pane"></div>
-                        <div
-                          class="leaflet-zoom-animated leaflet-proxy"
-                          style="transform: translate3d(317044px, 164002px, 0) scale(1024)"
-                        ></div>
-                      </div>
-                      <div class="leaflet-control-container">
-                        <div class="leaflet-left leaflet-top">
-                          <div class="leaflet-control leaflet-bar leaflet-control-zoom">
-                            <a
-                              href="#"
-                              class="leaflet-control-zoom-in"
-                              aria-disabled="false"
-                              aria-label="Zoom in"
-                              role="button"
-                              title="Zoom in"
-                              ><span aria-hidden="true">+</span></a
-                            ><a
-                              href="#"
-                              class="leaflet-control-zoom-out"
-                              aria-disabled="false"
-                              aria-label="Zoom out"
-                              role="button"
-                              title="Zoom out"
-                              ><span aria-hidden="true">−</span></a
-                            >
-                          </div>
-                        </div>
-                        <div class="leaflet-right leaflet-top"></div>
-                        <div class="leaflet-bottom leaflet-left"></div>
-                        <div class="leaflet-bottom leaflet-right">
-                          <div class="leaflet-control leaflet-control-attribution">
-                            <a href="https://leafletjs.com" title="A JavaScript library for interactive maps">
-                              <svg
-                                aria-hidden="true"
-                                class="leaflet-attribution-flag"
-                                height="8"
-                                viewBox="0 0 12 8"
-                                width="12"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path d="M0 0h12v4H0z" fill="#4C7BE1"></path>
-                                <path d="M0 4h12v3H0z" fill="#FFD500"></path>
-                                <path d="M0 7h12v1H0z" fill="#E0BC00"></path>
-                              </svg>
-                              Leaflet</a
-                            >
-                            <span aria-hidden="true">|</span> © OpenStreetMap contributors
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                  <div class="f/lex-1 relative w-full">
+                    <script
+                      type="text/javascript"
+                      charset="utf-8"
+                      async
+                      src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Aa30ea76a1a1cdfc32782c4015f8155061052b8bd01f36c55f498cc2fd510a3a8&amp;width=100%25&amp;height=500&amp;lang=ru_RU&amp;scroll=true"
+                    ></script>
+
                   </div>
                   <div
                     class="flex flex-col rounded-2xl overflow-hidden lg:w-72 w-full"
@@ -2499,7 +2017,7 @@
                       <img
                         alt="Как подготовиться к рождению первого ребёнка: полный гид для молодых родителей"
                         class="object-cover object-top h-full w-full duration-500 transition-transform"
-                        src="https://readdy.ai/api/search-image?query=happy%20pregnant%20woman%20sitting%20in%20cozy%20nursery%20room%20with%20soft%20pastel%20mint%20and%20cream%20decor%2C%20warm%20natural%20light%20streaming%20through%20window%2C%20modern%20minimalist%20interior%2C%20lifestyle%20photography&width=600&height=400&seq=art1&orientation=landscape"
+                        src="img/article_1.jpg"
                         style="transform: scale(1)"
                       />
                       <div
@@ -2546,7 +2064,7 @@
                       <img
                         alt="Первый месяц с новорождённым: режим, кормление и сон"
                         class="object-cover object-top h-full w-full duration-500 transition-transform"
-                        src="https://readdy.ai/api/search-image?query=newborn%20baby%20sleeping%20peacefully%20in%20soft%20cream%20colored%20blanket%2C%20gentle%20warm%20light%2C%20close%20up%20tender%20moment%2C%20pastel%20nursery%20background%2C%20professional%20lifestyle%20photography&width=600&height=400&seq=art2&orientation=landscape"
+                        src="img/article_2.jpg"
                         style="transform: scale(1)"
                       />
                       <div
@@ -2593,7 +2111,7 @@
                       <img
                         alt="Семейная ипотека 2026: условия, документы и как получить субсидию"
                         class="object-cover object-top h-full w-full duration-500 transition-transform"
-                        src="https://readdy.ai/api/search-image?query=modern%20cozy%20family%20apartment%20living%20room%20with%20soft%20mint%20green%20accents%2C%20cream%20walls%2C%20warm%20lighting%2C%20plants%2C%20comfortable%20furniture%2C%20real%20estate%20lifestyle%20photography&width=600&height=400&seq=art3&orientation=landscape"
+                        src="img/article_3.jpg"
                         style="transform: scale(1)"
                       />
                       <div
@@ -2666,7 +2184,7 @@
               <div class="mx-auto max-w-4xl">
                 <div class="text-center mb-12">
                   <span
-                    style="background: #e8f7f2; color: #3d8b6e"
+                    data-calendar-type="offline" style="background: #e8f7f2; color: #3d8b6e"
                     class="text-xs font-semibold rounded-full px-4 py-1.5 inline-block mb-4 tracking-widest uppercase"
                     >Частые вопросы</span
                   >
@@ -2793,10 +2311,11 @@
                     </div>
                   </div>
                   <div
+                    data-faq-item
                     class="transition-all duration-300 overflow-hidden rounded-2xl"
                     style="background: #f7f4ef; border: 1.5px solid transparent"
                   >
-                    <button class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
+                    <button data-faq-trigger class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
                       <span
                         style="background: #3d8a6e; opacity: 0.4"
                         class="mt-1 flex-shrink-0 h-2 rounded-full w-2"
@@ -2846,10 +2365,14 @@
                     </div>
                   </div>
                   <div
+                    data-faq-item
                     class="transition-all duration-300 overflow-hidden rounded-2xl"
                     style="background: #f7f4ef; border: 1.5px solid transparent"
                   >
-                    <button class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
+                    <button
+                      data-faq-trigger
+                      class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full"
+                    >
                       <span
                         style="background: #3d8a6e; opacity: 0.4"
                         class="mt-1 flex-shrink-0 h-2 rounded-full w-2"
@@ -2898,10 +2421,11 @@
                     </div>
                   </div>
                   <div
+                    data-faq-item
                     class="transition-all duration-300 overflow-hidden rounded-2xl"
                     style="background: #f7f4ef; border: 1.5px solid transparent"
                   >
-                    <button class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
+                    <button data-faq-trigger class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
                       <span
                         style="background: #3d8a6e; opacity: 0.4"
                         class="mt-1 flex-shrink-0 h-2 rounded-full w-2"
@@ -2950,10 +2474,11 @@
                     </div>
                   </div>
                   <div
+                    data-faq-item
                     class="transition-all duration-300 overflow-hidden rounded-2xl"
                     style="background: #f7f4ef; border: 1.5px solid transparent"
                   >
-                    <button class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
+                    <button data-faq-trigger class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
                       <span
                         style="background: #3d8a6e; opacity: 0.4"
                         class="mt-1 flex-shrink-0 h-2 rounded-full w-2"
@@ -3002,10 +2527,11 @@
                     </div>
                   </div>
                   <div
+                    data-faq-item
                     class="transition-all duration-300 overflow-hidden rounded-2xl"
                     style="background: #f7f4ef; border: 1.5px solid transparent"
                   >
-                    <button class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
+                    <button data-faq-trigger class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
                       <span
                         style="background: #3d8a6e; opacity: 0.4"
                         class="mt-1 flex-shrink-0 h-2 rounded-full w-2"
@@ -3039,10 +2565,11 @@
                     </div>
                   </div>
                   <div
+                    data-faq-item
                     class="transition-all duration-300 overflow-hidden rounded-2xl"
                     style="background: #f7f4ef; border: 1.5px solid transparent"
                   >
-                    <button class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
+                    <button data-faq-trigger class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
                       <span
                         style="background: #3d8a6e; opacity: 0.4"
                         class="mt-1 flex-shrink-0 h-2 rounded-full w-2"
@@ -3076,10 +2603,11 @@
                     </div>
                   </div>
                   <div
+                    data-faq-item
                     class="transition-all duration-300 overflow-hidden rounded-2xl"
                     style="background: #f7f4ef; border: 1.5px solid transparent"
                   >
-                    <button class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
+                    <button data-faq-trigger class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
                       <span
                         style="background: #3d8a6e; opacity: 0.4"
                         class="mt-1 flex-shrink-0 h-2 rounded-full w-2"
@@ -3128,10 +2656,11 @@
                     </div>
                   </div>
                   <div
+                    data-faq-item
                     class="transition-all duration-300 overflow-hidden rounded-2xl"
                     style="background: #f7f4ef; border: 1.5px solid transparent"
                   >
-                    <button class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
+                    <button data-faq-trigger class="flex items-start cursor-pointer gap-4 group px-6 py-5 text-left w-full">
                       <span
                         style="background: #3d8a6e; opacity: 0.4"
                         class="mt-1 flex-shrink-0 h-2 rounded-full w-2"
@@ -3156,7 +2685,7 @@
                       <div class="px-6 pb-6 pl-12">
                         <p class="text-sm mb-4 leading-relaxed" style="color: #4b5563">
                           Семьи с детьми-инвалидами получают: ежемесячную выплату по уходу (10 000 ₽ для родителей, 1
-                          200 ₽ для других лиц), пенсию по инвалидности ребёнку (от 15 000 ₽), налоговый вычет 12 000 ₽
+                          200 ₽ для других лиц), пенсию по инвалидности ребёнка (от 15 000 ₽), налоговый вычет 12 000 ₽
                           в месяц на каждого родителя, бесплатные лекарства и медицинские изделия, льготный проезд,
                           путёвки в санатории. Один из родителей имеет право на досрочную пенсию. Для оформления льгот
                           необходимо установить инвалидность через МСЭ.
@@ -3285,7 +2814,7 @@
                         <div class="flex gap-2 items-start justify-between mb-2">
                           <h4 class="text-sm font-bold leading-snug" style="color: #1a3a2e">Послеродовая депрессия</h4>
                           <span
-                            style="background: #3d8b6e18; color: #3d8a6e"
+                            style="background: #3d8a6e18; color: #3d8a6e"
                             class="text-xs font-semibold rounded-full whitespace-nowrap flex-shrink-0 px-2 py-0.5"
                             >Бесплатно</span
                           >
@@ -3377,7 +2906,7 @@
                           <img
                             alt="Анна Соколова"
                             class="object-cover object-top h-20 rounded-2xl w-20"
-                            src="https://readdy.ai/api/search-image?query=professional%20female%20psychologist%20warm%20smile%20soft%20natural%20light%20portrait%20pastel%20background%20calm%20approachable%20woman%2030s%20professional%20attire%20mint%20tones&width=80&height=80&seq=ps1&orientation=squarish"
+                            src="img/psych_1.jpg"
                           />
                           <div
                             class="flex items-center justify-center rounded-full -bottom-1 -right-1 absolute h-5 w-5"
@@ -3414,7 +2943,7 @@
                           <img
                             alt="Михаил Орлов"
                             class="object-cover object-top h-20 rounded-2xl w-20"
-                            src="https://readdy.ai/api/search-image?query=professional%20male%20therapist%20friendly%20confident%20portrait%20soft%20background%20warm%20tones%20man%2040s%20professional%20calm%20trustworthy%20pastel%20cream&width=80&height=80&seq=ps2&orientation=squarish"
+                            src="img/psych_2.jpg"
                           />
                           <div
                             class="flex items-center justify-center rounded-full -bottom-1 -right-1 absolute h-5 w-5"
@@ -3451,7 +2980,7 @@
                           <img
                             alt="Елена Громова"
                             class="object-cover object-top h-20 rounded-2xl w-20"
-                            src="https://readdy.ai/api/search-image?query=professional%20female%20counselor%20gentle%20smile%20portrait%20soft%20light%20pastel%20background%20woman%2030s%20warm%20approachable%20mint%20green%20tones%20professional&width=80&height=80&seq=ps3&orientation=squarish"
+                            src="img/psych_3.jpg"
                           />
                           <div
                             class="flex items-center justify-center rounded-full -bottom-1 -right-1 absolute h-5 w-5"
@@ -3692,6 +3221,5 @@
           </div>
         </footer>
       </div>
-    </div>
   </body>
 </html>

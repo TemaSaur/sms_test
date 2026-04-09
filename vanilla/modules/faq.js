@@ -18,7 +18,7 @@ export function initFaq() {
   const cleanupFns = [];
   const state = {
     activeCategory: "Все",
-    openId: 1,
+    openId: null,
   };
 
   const filterButtons = Array.from(section.querySelectorAll("[data-faq-category]"));
@@ -57,7 +57,7 @@ export function initFaq() {
 
   function setExpanded(item, expanded) {
     const trigger = item.querySelector("[data-faq-trigger]");
-    const dot = item.querySelector("span.mt-1.w-2.h-2.rounded-full");
+    const dot = item.querySelector("span.mt-1.h-2.rounded-full");
     const chevronWrap = trigger?.querySelector("div.w-8.h-8");
     const chevron = trigger?.querySelector("i");
     const contentWrap = item.querySelector("div.transition-all.duration-300.overflow-hidden");
@@ -77,6 +77,11 @@ export function initFaq() {
     if (contentWrap) {
       contentWrap.style.maxHeight = expanded ? "600px" : "0px";
     }
+
+    // Update ARIA attributes
+    if (trigger) {
+      trigger.setAttribute("aria-expanded", expanded ? "true" : "false");
+    }
   }
 
   function renderFilters() {
@@ -93,7 +98,10 @@ export function initFaq() {
     items.forEach((item) => {
       const visible = isVisibleByCategory(item);
       item.style.display = visible ? "" : "none";
-      if (visible && firstVisibleId == null) firstVisibleId = Number(item.dataset.faqId);
+      // Store the first visible item's ID for proper accordion behavior
+      if (visible && firstVisibleId === null) {
+        firstVisibleId = Number(item.dataset.faqId);
+      }
     });
 
     if (

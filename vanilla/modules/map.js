@@ -18,6 +18,13 @@ export function initMap() {
   const section = qs("#map");
   if (!section) return () => {};
 
+  // Add delay to ensure DOM and scripts are fully loaded
+  setTimeout(() => {
+    initMapInternal(section);
+  }, 100);
+}
+
+function initMapInternal(section) {
   const state = {
     filter: "all",
     selectedId: null,
@@ -53,9 +60,9 @@ export function initMap() {
   const listBody = listPane.querySelector(".flex-1.overflow-y-auto");
   if (!listBody) return () => {};
 
-  // Init Leaflet map.
+  // Init Leaflet map with better loading check and fallback
   if (!window.L) {
-    showMapUnavailable(mapEl, "Leaflet не загружен");
+    showMapUnavailable(mapEl, "Leaflet не загружен. Попробуйте обновить страницу.");
     return () => {};
   }
 
@@ -68,10 +75,40 @@ export function initMap() {
   window.L
     .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; OpenStreetMap contributors",
+      maxZoom: 19,
     })
     .addTo(map);
 
   // Create all markers once.
+  MAP_POINTS.forEach((point) => {
+    const marker = buildMarker(point);
+    marker.on("click", () => {
+      state.selectedId = point.id;
+      renderList();
+      const target = markerRegistry.get(point.id);
+      if (target?.marker) target.marker.openPopup();
+    });
+
+    marker.bindPopup(`
+      <div style="font-family:'Inter',sans-serif;padding:4px">
+        <p style="font-weight:700;font-size:14px;color:#1A3A2E;margin:0 0 4px">${escapeHtml(
+          point.name,
+        )}</p>
+        <p style="font-size:12px;color:#6B7A74;margin:0 0 8px">${escapeHtml(
+          point.address,
+        )}</p>
+        <a href="#" style="font-size:12px;color:#3D8B6E;font-weight:600;text-decoration:none">Проложить маршрут →</a>
+      </div>
+    `);
+
+    markerRegistry.set(point.id, { marker, data: point });
+  });
+
+  // First render.
+  syncMarkersToFilter();
+  renderList();
+
+  
   MAP_POINTS.forEach((point) => {
     const marker = buildMarker(point);
     marker.on("click", () => {
@@ -187,27 +224,11 @@ export function initMap() {
     markerRegistry.forEach(({ marker }) => {
       marker.remove();
     });
-    markerRegistry.clear();
-    if (map) {
-      map.remove();
-      map = null;
-    }
-  };
-}
+  }
 
-function buildMarker(point) {
-  const color = MAP_TYPE_COLORS[point.type];
-  const emoji = MAP_TYPE_EMOJIS[point.type];
-
-  const icon = window.L.divIcon({
-    className: "",
-    iconSize: [36, 36],
-    iconAnchor: [18, 36],
-    html: `
-      <div style="
-        background:${color};
-        width:36px;height:36px;
-        border-radius:50% 50% 50% 0;
+  function isVisibleByFilter(point, filter) {
+    return filter === "all" || point.type === filter;
+  }
         transform:rotate(-45deg);
         display:flex;align-items:center;justify-content:center;
         border:2px solid #fff;

@@ -3,7 +3,7 @@ import { initHeader } from "./modules/header.js";
 import { initHeroParallax } from "./modules/hero.js";
 import { initRevealSections } from "./modules/reveal.js";
 import { initCalculator } from "./modules/calculator.js";
-import { initMap } from "./modules/map.js";
+import { initYandexMap } from "./modules/yandexMap.js";
 import { initCommunity } from "./modules/community.js";
 import { initCourses } from "./modules/courses.js";
 import { initFaq } from "./modules/faq.js";
@@ -28,7 +28,7 @@ function initApp() {
   registerCleanup(initHeroParallax);
   registerCleanup(initRevealSections);
   registerCleanup(initCalculator);
-  registerCleanup(initMap);
+  registerCleanup(initYandexMap);
   registerCleanup(initCommunity);
   registerCleanup(initCourses);
   registerCleanup(initFaq);

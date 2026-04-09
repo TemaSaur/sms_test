@@ -26,11 +26,8 @@ export function initCalendar() {
   // Filter buttons using data-* attributes
   const filterButtons = Array.from(section.querySelectorAll("[data-calendar-filter]"));
 
-  // Event cards grid - find by looking for event cards with registration buttons
-  const cards = Array.from(section.querySelectorAll("button[class*='font-semibold'][class*='whitespace-nowrap']"))
-    .map(btn => btn.closest('.rounded-2xl, .transition-all') || btn.parentElement?.parentElement)
-    .filter(el => el && el instanceof HTMLElement)
-    .filter((el, index, arr) => arr.indexOf(el) === index); // remove duplicates
+  // Event cards grid - find cards with data-calendar-type attribute
+  const cards = Array.from(section.querySelectorAll("[data-calendar-type]"));
 
   if (!filterButtons.length || !cards.length) return () => {};
 
@@ -65,7 +62,11 @@ export function initCalendar() {
   }
 
   function getRegisterButton(card) {
-    return card.querySelector("button");
+    // Look for button with specific text content
+    const buttons = card.querySelectorAll("button");
+    return Array.from(buttons).find(btn => 
+      btn.textContent && btn.textContent.includes("Zaregistrirovatsya")
+    );
   }
 
   function updateRegisterButton(button, isRegistered) {
@@ -80,13 +81,17 @@ export function initCalendar() {
       button.style.background = "linear-gradient(135deg, #3D8B6E, #2C5F4F)";
       button.style.color = "#fff";
       button.style.border = "none";
-      button.textContent = "Зарегистрироваться";
+      button.innerHTML = isRegistered ? 
+      '<i class="ri-check-line mr-1.5"></i>Вы записаны' : 
+      "Зарегистрироваться";
     }
   }
 
   function cardMatchesFilter(card) {
     if (state.activeFilter === "all") return true;
-    return card.dataset.calendarType === state.activeFilter;
+    // Check if card has data-calendar-type attribute, otherwise assume online
+    const cardType = card.dataset.calendarType || "online";
+    return cardType === state.activeFilter;
   }
 
   function renderFilters() {
