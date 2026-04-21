@@ -31,10 +31,10 @@ export function initMap() {
 
   // Fallback style in case OpenFreeMap is blocked
   // const styleUrl = "https://tiles.stadiamaps.com/styles/alidade_smooth.json";
-  const styleUrl = "https://tiles.stadiamaps.com/styles/osm_bright.json";
-  // "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
-  // "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
-  // Alternative: 'https://demotiles.maplibre.org/style.json' (very basic but always works)
+  const styleUrl =
+    // "https://tiles.versatiles.org/assets/styles/colorful/style.json";
+    // "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
+    "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 
   map = new maplibregl.Map({
     container: "map",
@@ -43,6 +43,7 @@ export function initMap() {
     zoom: 11.5,
   });
 
+  // In your map.js
   map.addControl(new maplibregl.NavigationControl(), "top-right");
   map.addControl(new maplibregl.ScaleControl(), "bottom-left");
 
