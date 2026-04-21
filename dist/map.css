@@ -73,6 +73,10 @@
   padding: 4px 8px;
 }
 
+.maplibregl-canvas {
+  filter: saturate(8);
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .controls {
