@@ -3,12 +3,15 @@ import { initHeader } from "./modules/header.js";
 import { initHeroParallax } from "./modules/hero.js";
 import { initRevealSections } from "./modules/reveal.js";
 import { initCalculator } from "./modules/calculator.js";
-import { initYandexMap } from "./modules/yandexMap.js";
+import { initRoutes } from "./modules/routes.js";
+// import { initYandexMap } from "./modules/yandexMap.js";
+import { initMap } from "./modules/map.js";
 import { initCommunity } from "./modules/community.js";
 import { initCourses } from "./modules/courses.js";
 import { initFaq } from "./modules/faq.js";
 import { initPsychSupport } from "./modules/psychSupport.js";
 import { initCalendar } from "./modules/calendar.js";
+import { initMisc } from "./modules/misc.js";
 
 /**
  * Vanilla bootstrap entrypoint.
@@ -28,12 +31,15 @@ function initApp() {
   registerCleanup(initHeroParallax);
   registerCleanup(initRevealSections);
   registerCleanup(initCalculator);
-  registerCleanup(initYandexMap);
+  registerCleanup(initRoutes);
+  // registerCleanup(initYandexMap);
+  registerCleanup(initMap);
   registerCleanup(initCommunity);
   registerCleanup(initCourses);
   registerCleanup(initFaq);
   registerCleanup(initPsychSupport);
   registerCleanup(initCalendar);
+  registerCleanup(initMisc);
 
   // Optional debug marker.
   window.__familyNavigatorVanilla = {

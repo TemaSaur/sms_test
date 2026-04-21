@@ -1,5 +1,6 @@
 import { COMMUNITY_BOARD_POSTS } from "./data.js";
-import { qs } from "./utils.js";
+import { qs, on } from "./utils.js";
+import { openFamilyModal } from "./modal.js";
 
 /**
  * Community section behavior:
@@ -10,7 +11,7 @@ import { qs } from "./utils.js";
 export function initCommunity() {
   const section = qs("#community");
   if (!section) return () => {};
-  
+
   // Prevent double initialization
   if (section.dataset.communityInitialized === "true") return () => {};
   section.dataset.communityInitialized = "true";
@@ -21,7 +22,9 @@ export function initCommunity() {
   };
 
   // Find tab buttons using data-* attributes
-  const tabButtons = Array.from(section.querySelectorAll("[data-community-tab]"));
+  const tabButtons = Array.from(
+    section.querySelectorAll("[data-community-tab]"),
+  );
 
   const groupsBlock = section.querySelector("[data-community-groups]");
   if (!groupsBlock) return () => {};
@@ -106,6 +109,10 @@ export function initCommunity() {
         </div>
       `;
 
+      on(card, "click", () => {
+        openFamilyModal(". Сообщество");
+      });
+
       boardContainer.appendChild(card);
     });
 
@@ -124,6 +131,10 @@ export function initCommunity() {
       <p class="text-xs" style="color:#6B7A74">Сообщество поможет найти ответ</p>
     `;
     boardContainer.appendChild(cta);
+
+    on(cta, "click", () => {
+      openFamilyModal(". Сообщество");
+    });
 
     // Like handlers.
     boardContainer.querySelectorAll("[data-like-id]").forEach((btn) => {

@@ -1,5 +1,6 @@
 import { CALCULATOR_BENEFITS, CALCULATOR_REGIONS } from "./data.js";
-import { childWord, clamp, formatRub, qs } from "./utils.js";
+import { openFamilyModal } from "./modal.js";
+import { childWord, clamp, formatRub, qs, on } from "./utils.js";
 
 /**
  * Calculator module (vanilla rewrite of former React behavior):
@@ -12,7 +13,7 @@ import { childWord, clamp, formatRub, qs } from "./utils.js";
 export function initCalculator() {
   const section = qs("#calculator");
   if (!section) return () => {};
-  
+
   // Prevent double initialization
   if (section.dataset.calculatorInitialized === "true") return () => {};
   section.dataset.calculatorInitialized = "true";
@@ -40,15 +41,29 @@ export function initCalculator() {
   const subtitleEl = section.querySelector("[data-calc-subtitle]");
   const detailsToggleBtn = section.querySelector("[data-calc-details-toggle]");
 
-  let detailsContainer = summaryBox?.querySelector("[data-calc-details]") || null;
+  const getPlanBtn = section.querySelector("[data-get-plan]");
 
-  if (!regionSelect || !childrenValueEl || !housingYesBtn || !housingNoBtn || !summaryBox || !decBtn || !incBtn) {
+  let detailsContainer =
+    summaryBox?.querySelector("[data-calc-details]") || null;
+
+  if (
+    !regionSelect ||
+    !childrenValueEl ||
+    !housingYesBtn ||
+    !housingNoBtn ||
+    !summaryBox ||
+    !decBtn ||
+    !incBtn
+  ) {
     return () => {};
   }
 
   // --- helpers ---
   function getRegion() {
-    return CALCULATOR_REGIONS.find((r) => r.value === state.region) || CALCULATOR_REGIONS[0];
+    return (
+      CALCULATOR_REGIONS.find((r) => r.value === state.region) ||
+      CALCULATOR_REGIONS[0]
+    );
   }
 
   function computeItems() {
@@ -59,7 +74,9 @@ export function initCalculator() {
       if (benefit.housingOnly && !state.housing) {
         return { ...benefit, amount: 0 };
       }
-      const amount = Math.round((benefit.base + benefit.perChild * state.children) * multiplier);
+      const amount = Math.round(
+        (benefit.base + benefit.perChild * state.children) * multiplier,
+      );
       return { ...benefit, amount };
     }).filter((item) => item.amount > 0);
   }
@@ -143,7 +160,8 @@ export function initCalculator() {
 
       const iconWrap = document.createElement("div");
       iconWrap.className = "w-5 h-5 flex items-center justify-center";
-      iconWrap.innerHTML = '<i class="ri-check-line text-sm" style="color:#3D8B6E"></i>';
+      iconWrap.innerHTML =
+        '<i class="ri-check-line text-sm" style="color:#3D8B6E"></i>';
 
       const label = document.createElement("span");
       label.className = "text-sm";
@@ -236,6 +254,8 @@ export function initCalculator() {
       }),
     );
   }
+
+  on(getPlanBtn, "click", () => openFamilyModal(" + План выплат"));
 
   // initial render
   render();

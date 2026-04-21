@@ -1,4 +1,4 @@
-import { qs } from "./utils.js";
+import { qs, qsa } from "./utils.js";
 
 /**
  * Psych support section behavior (safe mode):
@@ -9,7 +9,7 @@ import { qs } from "./utils.js";
 export function initPsychSupport() {
   const section = qs("#psych-support");
   if (!section) return () => {};
-  
+
   // Prevent double initialization
   if (section.dataset.psychSupportInitialized === "true") return () => {};
   section.dataset.psychSupportInitialized = "true";
@@ -20,7 +20,7 @@ export function initPsychSupport() {
   const TAB_LABELS = ["Для родителей", "Для детей", "Для семьи"];
   let activeTabLabel = "Для родителей";
 
-  const tabButtons = Array.from(section.querySelectorAll("[data-psych-tab]"));
+  const tabButtons = qsa("[data-psych-tab]");
 
   if (!tabButtons.length) return () => {};
 
@@ -59,7 +59,6 @@ export function initPsychSupport() {
     tabButtons.forEach((btn) => {
       const tabType = btn.getAttribute("data-psych-tab");
       const active = tabType === activeTabLabel;
-      setTabButtonStyle(btn, active);
     });
   }
 

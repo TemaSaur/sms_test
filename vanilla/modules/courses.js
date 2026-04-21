@@ -1,4 +1,5 @@
-import { qs } from "./utils.js";
+import { openFamilyModal } from "./modal.js";
+import { on, qs } from "./utils.js";
 
 /**
  * Courses section behavior:
@@ -10,7 +11,7 @@ import { qs } from "./utils.js";
 export function initCourses() {
   const section = qs("#courses");
   if (!section) return () => {};
-  
+
   // Prevent double initialization
   if (section.dataset.coursesInitialized === "true") return () => {};
   section.dataset.coursesInitialized = "true";
@@ -19,12 +20,16 @@ export function initCourses() {
   const enrolledCourseIds = new Set();
 
   // 1) Filter buttons using data-* attributes
-  const filterButtons = Array.from(section.querySelectorAll("[data-courses-category]"));
+  const filterButtons = Array.from(
+    section.querySelectorAll("[data-courses-category]"),
+  );
   if (!filterButtons.length) return () => {};
 
   // 2) Course cards grid using data-* attribute
   const cardsGrid = section.querySelector("[data-courses-grid]");
   if (!cardsGrid) return () => {};
+
+  const getAllCoursesBtn = section.querySelector("[data-get-all-courses");
 
   const cards = Array.from(cardsGrid.children).filter(
     (el) => el instanceof HTMLElement,
@@ -36,7 +41,9 @@ export function initCourses() {
   });
 
   const state = {
-    activeCategory: normalizeCategory(filterButtons[0].getAttribute("data-courses-category") || "Все"),
+    activeCategory: normalizeCategory(
+      filterButtons[0].getAttribute("data-courses-category") || "Все",
+    ),
   };
 
   function setFilterButtonStyle(button, isActive) {
@@ -53,7 +60,9 @@ export function initCourses() {
   }
 
   function normalizeCategory(text) {
-    return String(text || "").replace(/\s+/g, " ").trim();
+    return String(text || "")
+      .replace(/\s+/g, " ")
+      .trim();
   }
 
   function cardMatchesCategory(card, activeCategory) {
@@ -65,8 +74,8 @@ export function initCourses() {
   }
 
   function extractPriceFromCard(card) {
-    const priceButton = Array.from(card.querySelectorAll("button")).find((btn) =>
-      /·/.test(btn.textContent || ""),
+    const priceButton = Array.from(card.querySelectorAll("button")).find(
+      (btn) => /·/.test(btn.textContent || ""),
     );
     if (!priceButton) return null;
 
@@ -77,7 +86,9 @@ export function initCourses() {
   }
 
   function getPrimaryActionButton(card) {
-    return card.querySelector("div.flex.flex-col.flex-1.p-5 > button:last-of-type");
+    return card.querySelector(
+      "div.flex.flex-col.flex-1.p-5 > button:last-of-type",
+    );
   }
 
   function updateEnrollmentButton(card) {
@@ -129,6 +140,8 @@ export function initCourses() {
       cleanupFns.push(() => btn.removeEventListener("click", handler));
     });
   }
+
+  on(getAllCoursesBtn, "click", openFamilyModal);
 
   function renderFilters() {
     filterButtons.forEach((btn) => {

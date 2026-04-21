@@ -3,6 +3,7 @@
   <meta charset="UTF-8" />
   <meta content="width=device-width,initial-scale=1" name="viewport" />
   <link rel="stylesheet" href="dist/styles.css" />
+  <link rel="stylesheet" href="dist/map.css" />
   <title></title>
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="" />
@@ -18,12 +19,14 @@
     name="description"
   />
   <meta content="пособия семьям, льготы молодым семьям, семейная ипотека" name="keywords" />
-  <script src="https://api-maps.yandex.ru/v3/?lang=ru_RU&apikey=531b4902-5d28-4740-885f-f04519cdcee1" type="text/javascript"></script>
   <script src="vanilla/main.js" crossorigin="" type="module"></script>
   <!--<link href="index.css" rel="stylesheet" crossorigin="" />-->
   <link href="img/icon.png" rel="icon" type="image/png" />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/posthog-js@1.96.1/dist/array.full.min.js" async></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.0/dist/maplibre-gl.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.0/dist/maplibre-gl.js"></script>
 
   <body>
       <div class="min-h-screen">
@@ -57,7 +60,7 @@
               style="color: #4a6b5e"
               >События</a
             ><a
-              href="#map"
+              href="#mapp"
               class="text-sm duration-200 cursor-pointer whitespace-nowrap font-medium transition-colors"
               style="color: #4a6b5e"
               >Карта</a
@@ -353,6 +356,7 @@
                     </div>
                   </div>
                   <button
+					data-get-plan
                     class="flex items-center justify-center rounded-xl cursor-pointer font-semibold transition-all w-full whitespace-nowrap duration-300 gap-3 h-14 hover:scale-[1.02] text-white"
                     style="background: linear-gradient(135deg, #3d8b6e, #2c5f4f); box-shadow: #3d8b6e 0 8px 24px"
                   >
@@ -383,6 +387,7 @@
                 </div>
                 <div class="gap-6 grid grid-cols-1 md:grid-cols-3 lg:gap-8">
                   <div
+					data-route-card="Маршрут беременности"
                     class="transition-all cursor-pointer rounded-3xl duration-400 group p-8 relative"
                     style="background: #fff; border: 1.5px solid #b8e6d5; transform: translateY(0)"
                   >
@@ -447,6 +452,7 @@
                     ></div>
                   </div>
                   <div
+					data-route-card="Маршрут новорождённого"
                     class="transition-all cursor-pointer rounded-3xl duration-400 group p-8 relative"
                     style="background: #fff; border: 1.5px solid #b8e6d5; transform: translateY(0)"
                   >
@@ -511,6 +517,7 @@
                     ></div>
                   </div>
                   <div
+					data-route-card="Маршрут жилья"
                     class="transition-all cursor-pointer rounded-3xl duration-400 group p-8 relative"
                     style="background: #fff; border: 1.5px solid #b8e6d5; transform: translateY(0)"
                   >
@@ -673,6 +680,7 @@
                     aria-labelledby="community-tab-groups"
                   >
                     <div
+					  data-community
                       class="transition-all cursor-pointer duration-300 hover:-translate-y-1 p-6 rounded-2xl"
                       style="background: #fff; border: 2px solid #b8e6d5"
                     >
@@ -709,6 +717,7 @@
                       </div>
                     </div>
                     <div
+					  data-community
                       class="transition-all cursor-pointer duration-300 hover:-translate-y-1 p-6 rounded-2xl"
                       style="background: #fff; border: 2px solid #b8e6d5"
                     >
@@ -745,6 +754,7 @@
                       </div>
                     </div>
                     <div
+					  data-community
                       class="transition-all cursor-pointer duration-300 hover:-translate-y-1 p-6 rounded-2xl"
                       style="background: #fff; border: 2px solid #b8e6d5"
                     >
@@ -1148,6 +1158,7 @@
                 <div class="text-center mt-10">
                   <p class="text-sm mb-4" style="color: #6b7a74">Хотите получить доступ ко всем курсам?</p>
                   <button
+					data-get-all-courses
                     class="items-center gap-2 text-sm duration-200 whitespace-nowrap cursor-pointer transition-all font-semibold hover:scale-105 rounded-full inline-flex px-8 py-3"
                     style="border: 2px solid #3d8b6e; color: #3d8b6e"
                   >
@@ -1711,6 +1722,7 @@
                     </p>
                   </div>
                   <button
+					data-subscribe
                     class="text-sm duration-200 cursor-pointer whitespace-nowrap transition-all font-semibold rounded-full hover:scale-105 px-5 flex-shrink-0 py-2"
                     style="background: #3d8b6e; color: #fff"
                   >
@@ -1721,8 +1733,8 @@
             </section>
           </section>
           <section class="transition-all duration-700 fade-in-section opacity-100 translate-y-0 delay-150">
-            <section class="py-20 md:py-28" style="background: #f0faf7" id="map">
-              <div class="mx-auto md:px-8 px-4 max-w-7xl">
+            <section class="py-20 md:py-28" style="background: #f0faf7" id="mapp">
+              <div class="mx-auto md:px-8 px-4 max-w-7xl relative">
                 <div class="flex flex-col gap-6 mb-10 md:flex-row md:items-end md:justify-between">
                   <div>
                     <span
@@ -1732,258 +1744,54 @@
                     >
                     <h2 class="font-bold md:text-4xl text-3xl text-black display">Найдите всё рядом с домом</h2>
                   </div>
-                  <div class="flex gap-2 flex-wrap">
+                  <div class="controls flex gap-2 flex-wrap">
                     <button
-                      class="items-center gap-2 text-sm duration-200 whitespace-nowrap cursor-pointer transition-all inline-flex rounded-full font-medium px-4 py-2"
-                      style="background: #3d8b6e; color: #fff; border: 1.5px solid #3d8b6e"
+					  data-type="all"
+                      class="filter-btn active items-center gap-2 text-sm duration-200 whitespace-nowrap cursor-pointer transition-all inline-flex rounded-full font-medium px-4 py-2"
                     >
                       <i class="ri-map-pin-line"></i>Все<span
-                        style="background: #fff; color: #fff"
+                        style="background: #fff; color: #4a6b5e"
                         class="text-xs rounded-full py-0.5 px-1.5"
-                        >10</span
+                        >9</span
                       >
                     </button>
                     <button
-                      class="items-center gap-2 text-sm duration-200 whitespace-nowrap cursor-pointer transition-all inline-flex rounded-full font-medium px-4 py-2"
-                      style="background: #fff; color: #4a6b5e; border: 1.5px solid #b8e6d5"
+					  data-type="green"
+                      class="filter-btn items-center gap-2 text-sm duration-200 whitespace-nowrap cursor-pointer transition-all inline-flex rounded-full font-medium px-4 py-2"
                     >
                       <i class="ri-hospital-line"></i>Клиники<span
-                        style="background: #b8e6d5; color: #3d8b6e"
-                        class="text-xs rounded-full py-0.5 px-1.5"
-                        >4</span
-                      >
-                    </button>
-                    <button
-                      class="items-center gap-2 text-sm duration-200 whitespace-nowrap cursor-pointer transition-all inline-flex rounded-full font-medium px-4 py-2"
-                      style="background: #fff; color: #4a6b5e; border: 1.5px solid #b8e6d5"
-                    >
-                      <i class="ri-plant-line"></i>Парки<span
-                        style="background: #b8e6d5; color: #3d8b6e"
+                        style="background: #ffffffa0; color: #000000a0"
                         class="text-xs rounded-full py-0.5 px-1.5"
                         >3</span
                       >
                     </button>
                     <button
-                      class="items-center gap-2 text-sm duration-200 whitespace-nowrap cursor-pointer transition-all inline-flex rounded-full font-medium px-4 py-2"
-                      style="background: #fff; color: #4a6b5e; border: 1.5px solid #b8e6d5"
+					  data-type="red"
+                      class="filter-btn items-center gap-2 text-sm duration-200 whitespace-nowrap cursor-pointer transition-all inline-flex rounded-full font-medium px-4 py-2"
+                    >
+                      <i class="ri-plant-line"></i>Парки<span
+                        style="background: #ffffffa0; color: #000000a0"
+                        class="text-xs rounded-full py-0.5 px-1.5"
+                        >3</span
+                      >
+                    </button>
+                    <button
+					  data-type="blue"
+                      class="filter-btn items-center gap-2 text-sm duration-200 whitespace-nowrap cursor-pointer transition-all inline-flex rounded-full font-medium px-4 py-2"
                     >
                       <i class="ri-building-line"></i>Детские сады<span
-                        style="background: #b8e6d5; color: #3d8b6e"
+                        style="background: #ffffffa0; color: #000000a0"
                         class="text-xs rounded-full py-0.5 px-1.5"
                         >3</span
                       >
                     </button>
                   </div>
                 </div>
-                <div class="flex flex-col gap-6 lg:flex-row">
-                  <div class="f/lex-1 relative w-full">
-                    <script
-                      type="text/javascript"
-                      charset="utf-8"
-                      async
-                      src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Aa30ea76a1a1cdfc32782c4015f8155061052b8bd01f36c55f498cc2fd510a3a8&amp;width=100%25&amp;height=500&amp;lang=ru_RU&amp;scroll=true"
-                    ></script>
+                <div class="flex flex-col gap-6 lg:flex-row relative">
+                  <div class="flex-1 relative w-full relative">
 
-                  </div>
-                  <div
-                    class="flex flex-col rounded-2xl overflow-hidden lg:w-72 w-full"
-                    style="background: #fff; border: 1.5px solid #b8e6d5; max-height: 500px"
-                  >
-                    <div class="p-4" style="border-bottom: 1px solid #b8e6d5">
-                      <p class="text-sm font-semibold" style="color: #1a3a2e">Найдено: 10 объектов</p>
-                    </div>
-                    <div class="flex-1 overflow-y-auto">
-                      <button
-                        class="text-left cursor-pointer w-full duration-150 p-4 transition-colors"
-                        style="border-bottom: 1px solid #b8e6d5; background: 0 0"
-                      >
-                        <div class="flex gap-3 items-start">
-                          <div
-                            class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-                            style="background: #e07070"
-                          >
-                            🏥
-                          </div>
-                          <div>
-                            <p class="text-sm mb-1 font-semibold leading-tight" style="color: #1a3a2e">
-                              Детская поликлиника №1
-                            </p>
-                            <p class="text-xs" style="color: #6b7a74">ул. Садовая, 12</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="text-left cursor-pointer w-full duration-150 p-4 transition-colors"
-                        style="border-bottom: 1px solid #b8e6d5; background: 0 0"
-                      >
-                        <div class="flex gap-3 items-start">
-                          <div
-                            class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-                            style="background: #e07070"
-                          >
-                            🏥
-                          </div>
-                          <div>
-                            <p class="text-sm mb-1 font-semibold leading-tight" style="color: #1a3a2e">
-                              Женская консультация №3
-                            </p>
-                            <p class="text-xs" style="color: #6b7a74">пр. Мира, 45</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="text-left cursor-pointer w-full duration-150 p-4 transition-colors"
-                        style="border-bottom: 1px solid #b8e6d5; background: 0 0"
-                      >
-                        <div class="flex gap-3 items-start">
-                          <div
-                            class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-                            style="background: #e07070"
-                          >
-                            🏥
-                          </div>
-                          <div>
-                            <p class="text-sm mb-1 font-semibold leading-tight" style="color: #1a3a2e">
-                              Перинатальный центр
-                            </p>
-                            <p class="text-xs" style="color: #6b7a74">ул. Ленина, 78</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="text-left cursor-pointer w-full duration-150 p-4 transition-colors"
-                        style="border-bottom: 1px solid #b8e6d5; background: 0 0"
-                      >
-                        <div class="flex gap-3 items-start">
-                          <div
-                            class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-                            style="background: #5a9e6f"
-                          >
-                            🌳
-                          </div>
-                          <div>
-                            <p class="text-sm mb-1 font-semibold leading-tight" style="color: #1a3a2e">
-                              Парк Семейного отдыха
-                            </p>
-                            <p class="text-xs" style="color: #6b7a74">ул. Парковая, 3</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="text-left cursor-pointer w-full duration-150 p-4 transition-colors"
-                        style="border-bottom: 1px solid #b8e6d5; background: 0 0"
-                      >
-                        <div class="flex gap-3 items-start">
-                          <div
-                            class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-                            style="background: #5a9e6f"
-                          >
-                            🌳
-                          </div>
-                          <div>
-                            <p class="text-sm mb-1 font-semibold leading-tight" style="color: #1a3a2e">
-                              Детский парк «Радуга»
-                            </p>
-                            <p class="text-xs" style="color: #6b7a74">ул. Зелёная, 19</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="text-left cursor-pointer w-full duration-150 p-4 transition-colors"
-                        style="border-bottom: 1px solid #b8e6d5; background: 0 0"
-                      >
-                        <div class="flex gap-3 items-start">
-                          <div
-                            class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-                            style="background: #5a9e6f"
-                          >
-                            🌳
-                          </div>
-                          <div>
-                            <p class="text-sm mb-1 font-semibold leading-tight" style="color: #1a3a2e">
-                              Сквер «Солнечный»
-                            </p>
-                            <p class="text-xs" style="color: #6b7a74">пер. Тихий, 7</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="text-left cursor-pointer w-full duration-150 p-4 transition-colors"
-                        style="border-bottom: 1px solid #b8e6d5; background: 0 0"
-                      >
-                        <div class="flex gap-3 items-start">
-                          <div
-                            class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-                            style="background: #e09a40"
-                          >
-                            🏫
-                          </div>
-                          <div>
-                            <p class="text-sm mb-1 font-semibold leading-tight" style="color: #1a3a2e">
-                              Детский сад №42 «Ромашка»
-                            </p>
-                            <p class="text-xs" style="color: #6b7a74">ул. Цветочная, 5</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="text-left cursor-pointer w-full duration-150 p-4 transition-colors"
-                        style="border-bottom: 1px solid #b8e6d5; background: 0 0"
-                      >
-                        <div class="flex gap-3 items-start">
-                          <div
-                            class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-                            style="background: #e09a40"
-                          >
-                            🏫
-                          </div>
-                          <div>
-                            <p class="text-sm mb-1 font-semibold leading-tight" style="color: #1a3a2e">
-                              Детский сад №17 «Солнышко»
-                            </p>
-                            <p class="text-xs" style="color: #6b7a74">ул. Берёзовая, 22</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="text-left cursor-pointer w-full duration-150 p-4 transition-colors"
-                        style="border-bottom: 1px solid #b8e6d5; background: 0 0"
-                      >
-                        <div class="flex gap-3 items-start">
-                          <div
-                            class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-                            style="background: #e09a40"
-                          >
-                            🏫
-                          </div>
-                          <div>
-                            <p class="text-sm mb-1 font-semibold leading-tight" style="color: #1a3a2e">
-                              Частный сад «Умка»
-                            </p>
-                            <p class="text-xs" style="color: #6b7a74">ул. Дружбы, 11</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="text-left cursor-pointer w-full duration-150 p-4 transition-colors"
-                        style="border-bottom: 1px solid #b8e6d5; background: 0 0"
-                      >
-                        <div class="flex gap-3 items-start">
-                          <div
-                            class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-                            style="background: #e07070"
-                          >
-                            🏥
-                          </div>
-                          <div>
-                            <p class="text-sm mb-1 font-semibold leading-tight" style="color: #1a3a2e">
-                              Стоматология для детей
-                            </p>
-                            <p class="text-xs" style="color: #6b7a74">ул. Весенняя, 33</p>
-                          </div>
-                        </div>
-                      </button>
-                    </div>
+					<div id="map"></div>
+
                   </div>
                 </div>
               </div>
@@ -2002,14 +1810,15 @@
                     <h2 class="font-bold md:text-4xl text-3xl text-black display">Знания для молодых родителей</h2>
                   </div>
                   <a
-                    href="#"
-                    class="items-center gap-2 text-sm duration-200 whitespace-nowrap font-semibold inline-flex transition-colors"
+					data-all-articles
+                    class="items-center gap-2 text-sm duration-200 whitespace-nowrap font-semibold inline-flex transition-colors cursor-pointer"
                     style="color: #3d8b6e"
                     >Все статьи<i class="ri-arrow-right-line"></i
                   ></a>
                 </div>
                 <div class="gap-6 grid grid-cols-1 lg:gap-8 lg:grid-cols-3 sm:grid-cols-2">
                   <article
+					data-all-articles
                     class="transition-all cursor-pointer duration-300 overflow-hidden rounded-3xl"
                     style="background: #fff; border: 1.5px solid #b8e6d5; transform: translateY(0)"
                   >
@@ -2057,6 +1866,7 @@
                     </div>
                   </article>
                   <article
+					data-all-articles
                     class="transition-all cursor-pointer duration-300 overflow-hidden rounded-3xl"
                     style="background: #fff; border: 1.5px solid #b8e6d5; transform: translateY(0)"
                   >
@@ -2104,6 +1914,7 @@
                     </div>
                   </article>
                   <article
+					data-all-articles
                     class="transition-all cursor-pointer duration-300 overflow-hidden rounded-3xl"
                     style="background: #fff; border: 1.5px solid #b8e6d5; transform: translateY(0)"
                   >
@@ -2169,6 +1980,7 @@
                       type="email"
                     />
                     <button
+					  data-subscribe
                       class="text-sm duration-200 cursor-pointer whitespace-nowrap transition-all font-semibold rounded-xl h-12 hover:scale-105 px-6"
                       style="background: #b8e6d5; color: #1a3a2e"
                     >
@@ -2773,22 +2585,22 @@
                   >
                     <button
                       data-psych-tab="parents"
-                      class="flex items-center gap-2 rounded-xl cursor-pointer duration-200 font-semibold text-sm transition-all whitespace-nowrap px-5 py-2.5"
-                      style="background: #fff; color: #2c5f4f; box-shadow: #3d8b6e 0 2px 8px"
+                      class="flex items-center gap-2 rounded-xl pointer-events-none duration-200 font-semibold text-sm transition-all whitespace-nowrap px-5 py-2.5"
+                      style="color: #4b5a54"
                     >
                       <i class="ri-parent-line"></i>Для родителей
                     </button>
                     <button
                       data-psych-tab="children"
-                      class="flex items-center gap-2 rounded-xl cursor-pointer duration-200 font-semibold text-sm transition-all whitespace-nowrap px-5 py-2.5"
-                      style="color: #6b7a74"
+                      class="flex items-center gap-2 rounded-xl pointer-events-none duration-200 font-semibold text-sm transition-all whitespace-nowrap px-5 py-2.5"
+                      style="background: #fff; color: #2c5f4f; box-shadow: #3d8b6e 0 2px 8px"
                     >
                       <i class="ri-bear-smile-line"></i>Для детей
                     </button>
                     <button
                       data-psych-tab="family"
-                      class="flex items-center gap-2 rounded-xl cursor-pointer duration-200 font-semibold text-sm transition-all whitespace-nowrap px-5 py-2.5"
-                      style="color: #6b7a74"
+                      class="flex items-center gap-2 rounded-xl pointer-events-none duration-200 font-semibold text-sm transition-all whitespace-nowrap px-5 py-2.5"
+                      style="color: #4b5a54"
                     >
                       <i class="ri-home-heart-line"></i>Для семьи
                     </button>
@@ -3117,7 +2929,7 @@
                     href="#"
                     class="flex items-center justify-center rounded-xl h-9 w-9 cursor-pointer duration-200 transition-colors"
                     style="background: #b8e6d533; color: #b8e6d5"
-                    ><i class="ri-instagram-line"></i
+                    ><i class="ri-max-line"></i
                   ></a>
                 </div>
               </div>

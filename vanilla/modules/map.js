@@ -1,314 +1,202 @@
+import { qsa, on, delegate } from "./utils.js";
 import {
-  MAP_DEFAULT_VIEW,
-  MAP_POINTS,
-  MAP_TYPES,
-  MAP_TYPE_COLORS,
-  MAP_TYPE_EMOJIS,
-} from "./data.js";
-import { qs } from "./utils.js";
+  markersData,
+  markerColors,
+  createGeoJSONSource,
+} from "./mapMarkers.js";
 
-/**
- * Fully rebuilt Leaflet map module:
- * - Replaces snapshot/static map DOM with a clean live map root
- * - Builds filter chips dynamically
- * - Creates/removes markers by active filter
- * - Syncs marker click <-> right-side list selection
- */
+let map = null;
+let popup = null;
+let cleanupHandlers = [];
+
 export function initMap() {
-  const section = qs("#map");
-  if (!section) return () => {};
-
-  // Add delay to ensure DOM and scripts are fully loaded
-  setTimeout(() => {
-    initMapInternal(section);
-  }, 100);
-}
-
-function initMapInternal(section) {
-  const state = {
-    filter: "all",
-    selectedId: null,
-  };
-
-  const markerRegistry = new Map(); // id -> { marker, data }
-  let map = null;
-
-  // Root elements in existing section.
-  const mapAndListWrap = section.querySelector(".flex.flex-col.gap-6.lg\\:flex-row");
-  if (!mapAndListWrap) return () => {};
-
-  const mapPane = mapAndListWrap.querySelector(".flex-1.relative");
-  const listPane = mapAndListWrap.querySelector(".flex.flex-col.rounded-2xl");
-  if (!mapPane || !listPane) return () => {};
-
-  // Rebuild map container from scratch to avoid stale snapshot Leaflet DOM.
-  mapPane.innerHTML = "";
-  const mapEl = document.createElement("div");
-  mapEl.className = "w-full rounded-2xl overflow-hidden";
-  mapEl.style.height = "500px";
-  mapEl.style.border = "1.5px solid rgba(184,230,213,0.5)";
-  mapPane.appendChild(mapEl);
-
-  // Build / rebuild filters row.
-  const filterRow = findMapFilterRow(section);
-  if (filterRow) {
-    renderFilterButtons(filterRow, state.filter, onFilterClick);
-  }
-
-  // Right-side list internals.
-  const listHeader = listPane.querySelector(".p-4 p");
-  const listBody = listPane.querySelector(".flex-1.overflow-y-auto");
-  if (!listBody) return () => {};
-
-  // Init Leaflet map with better loading check and fallback
-  if (!window.L) {
-    showMapUnavailable(mapEl, "Leaflet не загружен. Попробуйте обновить страницу.");
+  if (map) {
+    console.warn("[map] already initialized");
     return () => {};
   }
 
-  map = window.L.map(mapEl, {
-    center: MAP_DEFAULT_VIEW.center,
-    zoom: MAP_DEFAULT_VIEW.zoom,
-    zoomControl: true,
-  });
-
-  window.L
-    .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors",
-      maxZoom: 19,
-    })
-    .addTo(map);
-
-  // Create all markers once.
-  MAP_POINTS.forEach((point) => {
-    const marker = buildMarker(point);
-    marker.on("click", () => {
-      state.selectedId = point.id;
-      renderList();
-      const target = markerRegistry.get(point.id);
-      if (target?.marker) target.marker.openPopup();
-    });
-
-    marker.bindPopup(`
-      <div style="font-family:'Inter',sans-serif;padding:4px">
-        <p style="font-weight:700;font-size:14px;color:#1A3A2E;margin:0 0 4px">${escapeHtml(
-          point.name,
-        )}</p>
-        <p style="font-size:12px;color:#6B7A74;margin:0 0 8px">${escapeHtml(
-          point.address,
-        )}</p>
-        <a href="#" style="font-size:12px;color:#3D8B6E;font-weight:600;text-decoration:none">Проложить маршрут →</a>
-      </div>
-    `);
-
-    markerRegistry.set(point.id, { marker, data: point });
-  });
-
-  // First render.
-  syncMarkersToFilter();
-  renderList();
-
-  
-  MAP_POINTS.forEach((point) => {
-    const marker = buildMarker(point);
-    marker.on("click", () => {
-      state.selectedId = point.id;
-      renderList();
-      const target = markerRegistry.get(point.id);
-      if (target?.marker) target.marker.openPopup();
-    });
-
-    marker.bindPopup(`
-      <div style="font-family:'Inter',sans-serif;padding:4px">
-        <p style="font-weight:700;font-size:14px;color:#1A3A2E;margin:0 0 4px">${escapeHtml(
-          point.name,
-        )}</p>
-        <p style="font-size:12px;color:#6B7A74;margin:0 0 8px">${escapeHtml(
-          point.address,
-        )}</p>
-        <a href="#" style="font-size:12px;color:#3D8B6E;font-weight:600;text-decoration:none">Проложить маршрут →</a>
-      </div>
-    `);
-
-    markerRegistry.set(point.id, { marker, data: point });
-  });
-
-  // First render.
-  syncMarkersToFilter();
-  renderList();
-
-  function onFilterClick(nextFilter) {
-    if (state.filter === nextFilter) return;
-    state.filter = nextFilter;
-
-    // Clear selected if hidden by filter.
-    if (state.selectedId != null) {
-      const selected = MAP_POINTS.find((p) => p.id === state.selectedId);
-      if (selected && !isVisibleByFilter(selected, state.filter)) {
-        state.selectedId = null;
-      }
-    }
-
-    if (filterRow) {
-      renderFilterButtons(filterRow, state.filter, onFilterClick);
-    }
-    syncMarkersToFilter();
-    renderList();
+  // Ensure maplibregl is globally available
+  if (typeof maplibregl === "undefined") {
+    console.error(
+      '[map] MapLibre GL JS not loaded – add <script src="...maplibre-gl.js"> to HTML',
+    );
+    return () => {};
   }
 
-  function syncMarkersToFilter() {
-    markerRegistry.forEach(({ marker, data }) => {
-      if (isVisibleByFilter(data, state.filter)) {
-        marker.addTo(map);
-      } else {
-        marker.remove();
-      }
-    });
+  const container = document.getElementById("map");
+  if (!container) {
+    console.error("[map] #map element missing");
+    return () => {};
   }
 
-  function renderList() {
-    const items = MAP_POINTS.filter((p) => isVisibleByFilter(p, state.filter));
-    if (listHeader) {
-      listHeader.textContent = `Найдено: ${items.length} объектов`;
-    }
+  // Fallback style in case OpenFreeMap is blocked
+  // const styleUrl = "https://tiles.stadiamaps.com/styles/alidade_smooth.json";
+  const styleUrl = "https://tiles.stadiamaps.com/styles/osm_bright.json";
+  // "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
+  // "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+  // Alternative: 'https://demotiles.maplibre.org/style.json' (very basic but always works)
 
-    listBody.innerHTML = "";
-    items.forEach((point) => {
-      const selected = state.selectedId === point.id;
-      const row = document.createElement("button");
-      row.type = "button";
-      row.className = "text-left cursor-pointer w-full duration-150 p-4 transition-colors";
-      row.style.borderBottom = "1px solid rgba(184,230,213,0.3)";
-      row.style.background = selected ? "#F0FAF7" : "transparent";
+  map = new maplibregl.Map({
+    container: "map",
+    style: styleUrl,
+    center: [60.597576, 56.837565],
+    zoom: 11.5,
+  });
 
-      row.innerHTML = `
-        <div class="flex gap-3 items-start">
-          <div class="flex items-center justify-center flex-shrink-0 rounded-full h-8 w-8 text-sm"
-               style="background: ${MAP_TYPE_COLORS[point.type]}20;">
-            ${MAP_TYPE_EMOJIS[point.type]}
-          </div>
-          <div>
-            <p class="text-sm mb-1 font-semibold leading-tight" style="color:#1A3A2E">
-              ${escapeHtml(point.name)}
-            </p>
-            <p class="text-xs" style="color:#6B7A74">${escapeHtml(point.address)}</p>
-          </div>
-        </div>
-      `;
+  map.addControl(new maplibregl.NavigationControl(), "top-right");
+  map.addControl(new maplibregl.ScaleControl(), "bottom-left");
 
-      row.addEventListener("click", () => {
-        state.selectedId = point.id;
-        renderList();
+  let loadHandler = () => {
+    console.log("[map] style loaded – adding markers");
+    addMarkersToMap();
+    setupFilters();
+  };
+  map.on("load", loadHandler);
+  cleanupHandlers.push(() => map.off("load", loadHandler));
 
-        const entry = markerRegistry.get(point.id);
-        if (entry?.marker) {
-          entry.marker.addTo(map);
-          map.setView([point.lat, point.lng], Math.max(map.getZoom(), 14), {
-            animate: true,
-          });
-          entry.marker.openPopup();
-        }
-      });
-
-      listBody.appendChild(row);
-    });
-  }
-
-  // Fix map tiles sizing if section becomes visible after layout changes.
-  const resizeTimer = setTimeout(() => {
-    if (map) map.invalidateSize();
-  }, 100);
+  // Also handle style load errors
+  map.on("error", (e) => {
+    console.error("[map] error:", e);
+  });
 
   return () => {
-    clearTimeout(resizeTimer);
-    markerRegistry.forEach(({ marker }) => {
-      marker.remove();
-    });
+    cleanupHandlers.forEach((fn) => fn());
+    cleanupHandlers = [];
+    if (map) {
+      map.remove();
+      map = null;
+    }
+    if (popup) {
+      popup.remove();
+      popup = null;
+    }
+  };
+}
+
+function addMarkersToMap() {
+  if (!map || !map.getStyle()) {
+    console.warn("[map] addMarkersToMap called before style ready");
+    return;
   }
 
-  function isVisibleByFilter(point, filter) {
-    return filter === "all" || point.type === filter;
-  }
-        transform:rotate(-45deg);
-        display:flex;align-items:center;justify-content:center;
-        border:2px solid #fff;
-        box-shadow:0 2px 8px rgba(0,0,0,0.2);
-      ">
-        <span style="transform:rotate(45deg);font-size:16px">${emoji}</span>
-      </div>
-    `,
+  const geojsonData = createGeoJSONSource("all");
+  console.log(
+    "[map] adding source with",
+    geojsonData.features.length,
+    "markers",
+  );
+
+  map.addSource("markers", {
+    type: "geojson",
+    data: geojsonData,
   });
 
-  return window.L.marker([point.lat, point.lng], { icon });
-}
+  map.addLayer({
+    id: "markers-circle",
+    type: "circle",
+    source: "markers",
+    paint: {
+      "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 8, 15, 12],
+      "circle-color": ["get", "color"],
+      "circle-stroke-width": 2,
+      "circle-stroke-color": "#ffffff",
+      "circle-opacity": 0.9,
+    },
+  });
 
-function isVisibleByFilter(point, filter) {
-  return filter === "all" || point.type === filter;
-}
+  map.addLayer({
+    id: "markers-labels",
+    type: "symbol",
+    source: "markers",
+    layout: {
+      "text-field": ["get", "label"],
+      "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 15, 14],
+      "text-offset": [0, -1.5],
+      "text-anchor": "top",
+      "text-allow-overlap": false,
+      "text-ignore-placement": false,
+    },
+    paint: {
+      "text-color": "#333333",
+      "text-halo-color": "#ffffff",
+      "text-halo-width": 2,
+    },
+  });
 
-function findMapFilterRow(section) {
-  // Existing map filter row is the second direct child in section header's right side.
-  // We locate a container with several buttons containing map filter labels/icons.
-  const candidateGroups = Array.from(section.querySelectorAll("div"))
-    .filter((el) => {
-      const buttons = el.querySelectorAll("button");
-      return buttons.length >= 3 && /Клиники|Парки|Детские сады/.test(el.textContent || "");
-    });
-
-  return candidateGroups[0] || null;
-}
-
-function renderFilterButtons(container, activeValue, onClick) {
-  container.innerHTML = "";
-  MAP_TYPES.forEach((type) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className =
-      "items-center gap-2 text-sm duration-200 whitespace-nowrap cursor-pointer transition-all inline-flex rounded-full font-medium px-4 py-2";
-    const active = activeValue === type.value;
-
-    btn.style.background = active ? type.color : "#fff";
-    btn.style.color = active ? "#fff" : "#4A6B5E";
-    btn.style.border = `1.5px solid ${active ? type.color : "#B8E6D5"}`;
-
-    const count =
-      type.value === "all"
-        ? MAP_POINTS.length
-        : MAP_POINTS.filter((p) => p.type === type.value).length;
-
-    btn.innerHTML = `
-      <i class="${type.icon}"></i>
-      ${type.label}
-      <span class="text-xs rounded-full py-0.5 px-1.5"
-            style="background:${active ? "rgba(255,255,255,0.25)" : "rgba(184,230,213,0.4)"};color:${active ? "#fff" : "#3D8B6E"}">
-        ${count}
-      </span>
+  // Click popup
+  map.on("click", "markers-circle", (e) => {
+    const coordinates = e.features[0].geometry.coordinates.slice();
+    const props = e.features[0].properties;
+    const html = `
+      <div style="font-family:sans-serif;">
+        <strong style="color:${props.color};">${props.label}</strong>
+        <p style="margin:5px 0 0;font-size:12px;">${props.description}</p>
+      </div>
     `;
-
-    btn.addEventListener("click", () => onClick(type.value));
-    container.appendChild(btn);
+    if (popup) popup.remove();
+    popup = new maplibregl.Popup()
+      .setLngLat(coordinates)
+      .setHTML(html)
+      .addTo(map);
   });
+
+  map.on(
+    "mouseenter",
+    "markers-circle",
+    () => (map.getCanvas().style.cursor = "pointer"),
+  );
+  map.on(
+    "mouseleave",
+    "markers-circle",
+    () => (map.getCanvas().style.cursor = ""),
+  );
+
+  const eventCleanup = () => {
+    map.off("click", "markers-circle");
+    map.off("mouseenter", "markers-circle");
+    map.off("mouseleave", "markers-circle");
+  };
+  cleanupHandlers.push(eventCleanup);
 }
 
-function showMapUnavailable(root, message) {
-  root.innerHTML = `
-    <div class="h-full w-full flex items-center justify-center rounded-2xl" style="background:#F0FAF7">
-      <div class="text-center">
-        <div class="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center"
-             style="background:rgba(184,230,213,0.5);color:#3D8B6E">
-          <i class="ri-map-pin-line text-xl"></i>
-        </div>
-        <p class="text-sm" style="color:#6B7A74">${escapeHtml(message)}</p>
-      </div>
-    </div>
-  `;
+function setupFilters() {
+  const controls = document.querySelector(".controls");
+  if (!controls) {
+    console.warn("[map] .controls not found – filters will not work");
+    return;
+  }
+
+  const removeDelegate = delegate(
+    controls,
+    "click",
+    ".filter-btn",
+    (event, btn) => {
+      const filterType = btn.getAttribute("data-type") || "all";
+      updateFilter(filterType);
+      qsa(".filter-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      console.log(`[map] filter changed to ${filterType}`);
+    },
+  );
+  cleanupHandlers.push(removeDelegate);
+
+  const onKey = (e) => {
+    const keyMap = { 1: "all", 2: "blue", 3: "red", 4: "green" };
+    const type = keyMap[e.key];
+    if (type) {
+      const btn = document.querySelector(`.filter-btn[data-type="${type}"]`);
+      if (btn) btn.click();
+    }
+  };
+  document.addEventListener("keydown", onKey);
+  cleanupHandlers.push(() => document.removeEventListener("keydown", onKey));
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+function updateFilter(filterType) {
+  const source = map.getSource("markers");
+  if (source) {
+    source.setData(createGeoJSONSource(filterType));
+  } else {
+    console.warn("[map] source not ready yet");
+  }
 }
