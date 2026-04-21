@@ -31,7 +31,7 @@ export function initMap() {
 
   // Fallback style in case OpenFreeMap is blocked
   // const styleUrl = "https://tiles.stadiamaps.com/styles/alidade_smooth.json";
-  const styleUrl = "/osm_bright.json";
+  const styleUrl = "https://tiles.stadiamaps.com/styles/osm_bright.json";
   // "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
   // "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
   // Alternative: 'https://demotiles.maplibre.org/style.json' (very basic but always works)
