@@ -1,37 +1,32 @@
 import { qs } from "./utils.js";
 
-/**
- * Calendar section behavior:
- * - filter chips: Все / Онлайн / Офлайн
- * - per-event registration toggle:
- *   "Зарегистрироваться" <-> "Вы записаны"
- *
- * Works directly against snapshot HTML in #calendar.
- */
 export function initCalendar() {
   const section = qs("#calendar");
   if (!section) return () => {};
-  
-  // Prevent double initialization
+
   if (section.dataset.calendarInitialized === "true") return () => {};
   section.dataset.calendarInitialized = "true";
 
   const cleanupFns = [];
   const registeredIds = new Set();
 
-  const state = {
-    activeFilter: "all", // all | online | offline
-  };
+  const state = { activeFilter: "all" };
 
-  // Filter buttons using data-* attributes
-  const filterButtons = Array.from(section.querySelectorAll("[data-calendar-filter]"));
+  const filterButtons = Array.from(
+    section.querySelectorAll("[data-calendar-filter]"),
+  );
 
-  // Event cards grid - find cards with data-calendar-type attribute
-  const cards = Array.from(section.querySelectorAll("[data-calendar-type]"));
+  // Try to get cards by data-calendar-type, fallback to a structural selector
+  let cards = Array.from(section.querySelectorAll("[data-calendar-type]"));
+  if (!cards.length) {
+    // fallback: look for typical event card containers (adjust if needed)
+    cards = Array.from(
+      section.querySelectorAll(".bg-white.rounded-2xl.shadow-sm"),
+    );
+  }
+  if (!cards.length) return () => {};
 
-  if (!filterButtons.length || !cards.length) return () => {};
-
-  // Assign stable IDs + detect type from badge text.
+  // Assign stable IDs and detect type from badge
   cards.forEach((card, index) => {
     card.dataset.calendarId = String(index + 1);
 
@@ -44,7 +39,9 @@ export function initCalendar() {
   });
 
   function normalize(text) {
-    return String(text || "").replace(/\s+/g, " ").trim();
+    return String(text || "")
+      .replace(/\s+/g, " ")
+      .trim();
   }
 
   function getFilterFromButton(btn) {
@@ -61,12 +58,15 @@ export function initCalendar() {
     button.style.border = "none";
   }
 
+  // FIXED: find button by Russian text (both states)
   function getRegisterButton(card) {
-    // Look for button with specific text content
     const buttons = card.querySelectorAll("button");
-    return Array.from(buttons).find(btn => 
-      btn.textContent && btn.textContent.includes("Zaregistrirovatsya")
-    );
+    return Array.from(buttons).find((btn) => {
+      const text = btn.textContent || "";
+      return (
+        text.includes("Зарегистрироваться") || text.includes("Вы записаны")
+      );
+    });
   }
 
   function updateRegisterButton(button, isRegistered) {
@@ -81,15 +81,12 @@ export function initCalendar() {
       button.style.background = "linear-gradient(135deg, #3D8B6E, #2C5F4F)";
       button.style.color = "#fff";
       button.style.border = "none";
-      button.innerHTML = isRegistered ? 
-      '<i class="ri-check-line mr-1.5"></i>Вы записаны' : 
-      "Зарегистрироваться";
+      button.innerHTML = "Зарегистрироваться";
     }
   }
 
   function cardMatchesFilter(card) {
     if (state.activeFilter === "all") return true;
-    // Check if card has data-calendar-type attribute, otherwise assume online
     const cardType = card.dataset.calendarType || "online";
     return cardType === state.activeFilter;
   }
@@ -105,7 +102,6 @@ export function initCalendar() {
     cards.forEach((card) => {
       const id = Number(card.dataset.calendarId || "0");
       const visible = cardMatchesFilter(card);
-
       card.style.display = visible ? "" : "none";
 
       const registerBtn = getRegisterButton(card);
@@ -118,18 +114,17 @@ export function initCalendar() {
     renderCards();
   }
 
-  // Bind filter events
+  // Filter events
   filterButtons.forEach((btn) => {
     const handler = () => {
       state.activeFilter = getFilterFromButton(btn);
       render();
     };
-
     btn.addEventListener("click", handler);
     cleanupFns.push(() => btn.removeEventListener("click", handler));
   });
 
-  // Bind register toggle events
+  // Toggle events (now the button will be found)
   cards.forEach((card) => {
     const id = Number(card.dataset.calendarId || "0");
     const btn = getRegisterButton(card);
@@ -138,10 +133,8 @@ export function initCalendar() {
     const handler = () => {
       if (registeredIds.has(id)) registeredIds.delete(id);
       else registeredIds.add(id);
-
       updateRegisterButton(btn, registeredIds.has(id));
     };
-
     btn.addEventListener("click", handler);
     cleanupFns.push(() => btn.removeEventListener("click", handler));
   });
@@ -155,13 +148,4 @@ export function initCalendar() {
       } catch {}
     });
   };
-}
-
-function findFilterRow(section) {
-  // The row is the inline-flex rounded-full group next to heading in #calendar.
-  return (
-    section.querySelector(".p-1.inline-flex.rounded-full.md\\:self-auto.self-start") ||
-    section.querySelector(".inline-flex.rounded-full") ||
-    null
-  );
 }
